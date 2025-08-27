@@ -28,7 +28,7 @@ body{
 .exp ul,.project p{margin:8px 0 0 18px}
 .footer{padding:24px;text-align:center;border-top:1px solid rgba(0,0,0,0.04);color:rgba(31,31,31,0.6)}
 
-@media (max-width:900px){.container{grid-template-columns:1fr;padding:20px} .nav{display:none}}
+@media (max-width:900px){.container{grid-template-columns:1fr;padding:20px}}
 
 /* Minimal accent */
 .accent{color:#7a6b59}
@@ -139,15 +139,64 @@ body[data-theme='retro']{background:linear-gradient(180deg,#fff7ed,#efe6da);colo
 
 /* Header controls cleanup: keep theme buttons visible and hide hamburger on wide screens */
 .header-right{display:flex;align-items:center;gap:12px}
-.hamburger{display:none;border:0;background:transparent;padding:6px;border-radius:8px;cursor:pointer}
-.hamburger-box{display:inline-block;width:28px;height:18px}
+.hamburger{display:none;border:0;background:transparent;padding:6px;border-radius:8px;cursor:pointer;position:relative}
+.hamburger-box{display:inline-block;width:28px;height:18px;position:relative}
 .hamburger-inner, .hamburger-inner:before, .hamburger-inner:after{display:block;background:rgba(0,0,0,0.5);height:2px;border-radius:2px;position:absolute;left:0;right:0}
 .hamburger-inner{top:50%;transform:translateY(-50%)}
 .hamburger-inner:before{content:'';top:-7px}
 .hamburger-inner:after{content:'';top:7px}
 
+/* Mobile menu styles */
 @media (max-width:900px){
   .hamburger{display:inline-block}
-  .theme-switcher{display:none}
+  
+  /* Mobile nav menu */
+  .nav{
+    display:none;
+    position:absolute;
+    top:100%;
+    left:0;
+    right:0;
+    background:rgba(255,255,255,0.98);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid rgba(0,0,0,0.1);
+    box-shadow:0 4px 12px rgba(0,0,0,0.1);
+    padding:16px;
+    flex-direction:column;
+    gap:8px;
+    z-index:1000;
+  }
+  
+  .nav-open{
+    display:flex !important;
+  }
+  
+  .nav a{
+    padding:12px 16px;
+    margin:0;
+    border-radius:8px;
+    transition:background 0.2s;
+  }
+  
+  .nav a:hover{
+    background:rgba(0,0,0,0.05);
+  }
+  
+  .mobile-theme-switcher{
+    padding:12px 16px;
+    border-top:1px solid rgba(0,0,0,0.08);
+    margin-top:8px;
+    padding-top:16px;
+  }
+  
+  .mobile-theme-switcher .theme-switcher{
+    display:flex;
+    width:100%;
+    justify-content:center;
+  }
+  
+  .header{
+    position:relative;
+  }
 }
 

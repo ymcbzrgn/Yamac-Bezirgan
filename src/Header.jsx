@@ -1,8 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ThemeSwitcher from './ThemeSwitcher';
 
 export default function Header({ contact, onThemeChange }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 900);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -19,9 +31,14 @@ export default function Header({ contact, onThemeChange }) {
         <a href="/extra-projects.html" onClick={toggleMenu}>Projects</a>
         <a href="#skills" onClick={toggleMenu}>Skills</a>
         <a href="#contact" onClick={toggleMenu}>Contact</a>
+        {isMobile && (
+          <div className="mobile-theme-switcher">
+            <ThemeSwitcher onThemeChange={onThemeChange} />
+          </div>
+        )}
       </nav>
       <div className="header-right">
-        <ThemeSwitcher onThemeChange={onThemeChange} />
+        {!isMobile && <ThemeSwitcher onThemeChange={onThemeChange} />}
         <button className="hamburger" onClick={toggleMenu}>
           <span className="hamburger-box">
             <span className="hamburger-inner"></span>
