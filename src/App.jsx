@@ -10,7 +10,7 @@ const contact = {
 };
 
 const sections = {
-  about: `A focused computer engineering graduate with hands-on full-stack experience, building end-to-end, user-centric products. I blend strong technical rigor with a creative, product mindset to deliver reliable, innovative software. With a growing focus on AI, I'm ready to contribute to impactful projects in dynamic, collaborative teams. Born on 22.10.2002.`,
+  about: `Computer Engineering graduate with expertise in AI automation and full-stack development. I build scalable web applications, implement machine learning solutions, and create data visualization tools. Passionate about solving complex problems through code, from image processing algorithms to enterprise automation platforms. Currently contributing to cutting-edge AI projects while exploring emerging technologies.`,
   experience: [
     {
       role: 'ML & AI Automation Intern',
@@ -73,16 +73,16 @@ const sections = {
       school: 'Altınbaş University',
       degree: 'Computer Engineering',
       date: '2020 - 2025',
-      details: 'Relevant Courses: Data Structures, Algorithms, Artificial Intelligence, Image Processing Techniques, Database Management Systems, and more...'
+      details: 'Specialized in AI/ML, algorithms, and software architecture. Core focus: data structures, machine learning systems, computer vision, and distributed computing.'
     },
     {
       school: 'Università degli Studi di Milano',
       degree: 'Erasmus+ Exchange Program',
       date: '2022 - 2023',
-      details: 'Focus: Advanced software development and artificial intelligence, with a solid performance in both undergraduate and graduate courses. Selected Courses: Intelligent Systems, Real-Time Graphics Programming, Natural Interaction, and more...'
+      details: 'Advanced AI research and software development. Coursework: intelligent systems, real-time graphics programming, natural interaction, and European software engineering methodologies.'
     }
   ],
-  skills: ['Python', 'TypeScript', 'React', 'Next.js', 'Node.js', 'REST APIs', 'PostgreSQL', 'MongoDB', 'Docker', 'Git', 'OAuth/JWT', 'CI/CD', 'Solution Architecture', 'API Architecture & Standards', 'Workflow Orchestration (n8n)', 'LLM Systems Orchestration', 'Prompt Engineering & Evaluation', 'Agile Delivery (Scrum/Kanban)', 'Automated Testing (Unit/Integration)', 'Requirements Analysis'],
+  skills: ['Python', 'JavaScript', 'TypeScript', 'C#', 'React', 'Next.js', 'Node.js', 'Express', 'REST APIs', 'MongoDB', 'PostgreSQL', 'OpenCV', 'Computer Vision', 'Machine Learning', 'AI Automation', 'Data Visualization', 'Streamlit', 'Docker', 'Git', 'EJS', 'CSS', 'HTML', 'Bootstrap', 'Tkinter', 'NumPy', 'Pandas', 'WebSocket', 'Async Programming', 'Database Design', 'API Development', 'Image Processing', 'Real-time Data', 'Geospatial Data', 'Algorithm Implementation', 'Full-Stack Development', 'UI/UX Design', 'Problem Solving'],
   certificates: ['Introduction to Big Data / BTK Academia', 'CEO Career Summit / Youthall', 'Preparing to My New Job / Kodluyoruz', '18.MÜYAK / Endüstri ve Verimlilik Kulübü']
 };
 
