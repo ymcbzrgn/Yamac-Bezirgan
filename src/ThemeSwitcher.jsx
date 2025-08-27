@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from 'react';
 
 const themes = [
-  { name: 'Minimal', id: 'minimal' },
-  { name: 'Paper', id: 'paper' },
+  { name: 'Light', id: 'light' },
   { name: 'Dark', id: 'dark' },
-  { name: 'Retro', id: 'retro' },
+  { name: 'Paper', id: 'paper' },
 ];
 
 export default function ThemeSwitcher({ onThemeChange }) {
-  const [active, setActive] = useState(() => document.body.getAttribute('data-theme') || 'minimal');
+  const [active, setActive] = useState(() => document.body.getAttribute('data-theme') || 'light');
 
   useEffect(() => {
     // keep local active state in sync if another part of the app changes the body theme
-    const observer = new MutationObserver(() => setActive(document.body.getAttribute('data-theme') || 'minimal'));
+    const observer = new MutationObserver(() => setActive(document.body.getAttribute('data-theme') || 'light'));
     observer.observe(document.body, { attributes: true, attributeFilter: ['data-theme'] });
     return () => observer.disconnect();
   }, []);

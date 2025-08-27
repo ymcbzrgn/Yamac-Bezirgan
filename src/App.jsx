@@ -100,7 +100,7 @@ import Contact from './Contact';
 import CertificatesReferences from './CertificatesReferences';
 
 export default function App() {
-  const [theme, setTheme] = useState('minimal');
+  const [theme, setTheme] = useState('light');
 
   useEffect(() => {
     document.body.setAttribute('data-theme', theme);
