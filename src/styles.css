@@ -524,22 +524,33 @@ body[data-theme='dark'] .contact-icon {
   box-shadow: var(--shadow-sm);
 }
 
-/* Glass Morphism Mobile Menu */
-body[data-theme='dark'] @media (max-width: 900px) {
-  .nav {
-    background: var(--glass-bg);
-    backdrop-filter: blur(24px) saturate(200%);
-    border: 1px solid var(--glass-border);
-    box-shadow: var(--glass-shadow);
+/* MOBILE-SPECIFIC DARK THEME FIXES */
+@media (max-width: 900px) {
+  body[data-theme='dark'] .nav {
+    background: var(--card-bg) !important;
+    backdrop-filter: blur(8px) !important;
+    border: 1px solid var(--card-border) !important;
+    box-shadow: 0 4px 12px var(--card-shadow) !important;
+  }
+  
+  body[data-theme='dark']::before {
+    display: none !important;
+  }
+  
+  body[data-theme='dark'] .card,
+  body[data-theme='dark'] .project-card {
+    backdrop-filter: none !important;
   }
 }
 
-/* Premium Hamburger Animation */
-body[data-theme='dark'] .hamburger:hover .hamburger-inner,
-body[data-theme='dark'] .hamburger:hover .hamburger-inner::before,
-body[data-theme='dark'] .hamburger:hover .hamburger-inner::after {
-  background: var(--accent-primary);
-  box-shadow: var(--glow-subtle);
+/* Premium Hamburger Animation - Mobile Safe */
+@media (hover: hover) {
+  body[data-theme='dark'] .hamburger:hover .hamburger-inner,
+  body[data-theme='dark'] .hamburger:hover .hamburger-inner::before,
+  body[data-theme='dark'] .hamburger:hover .hamburger-inner::after {
+    background: var(--accent-primary);
+    box-shadow: var(--glow-subtle);
+  }
 }
 
 /* Ultra-Premium Footer */
@@ -559,11 +570,13 @@ body[data-theme='dark'] .toggle-details:focus {
   box-shadow: var(--shadow-md), var(--glow-subtle);
 }
 
-/* Premium Brand Hover */
-body[data-theme='dark'] .brand:hover {
-  color: var(--accent-primary);
-  text-shadow: var(--glow-subtle);
-  transition: all 0.3s ease;
+/* Premium Brand Hover - Mobile Safe */
+@media (hover: hover) {
+  body[data-theme='dark'] .brand:hover {
+    color: var(--accent-primary);
+    text-shadow: var(--glow-subtle);
+    transition: all 0.3s ease;
+  }
 }
 
 /* Enhanced Timeline */
@@ -1080,22 +1093,33 @@ body[data-theme='paper'] .contact-icon {
   box-shadow: var(--shadow-sm);
 }
 
-/* Vintage Paper Mobile Menu */
-body[data-theme='paper'] @media (max-width: 900px) {
-  .nav {
-    background: var(--bg-glass);
-    backdrop-filter: blur(20px) saturate(130%);
-    border: 1px solid var(--card-border);
-    box-shadow: var(--shadow-lg);
+/* MOBILE-SPECIFIC PAPER THEME FIXES */
+@media (max-width: 900px) {
+  body[data-theme='paper'] .nav {
+    background: var(--card-bg) !important;
+    backdrop-filter: blur(8px) !important;
+    border: 1px solid var(--card-border) !important;
+    box-shadow: 0 4px 12px var(--card-shadow) !important;
+  }
+  
+  body[data-theme='paper']::before {
+    display: none !important;
+  }
+  
+  body[data-theme='paper'] .card::after,
+  body[data-theme='paper'] .project-card .project-body::before {
+    display: none !important;
   }
 }
 
-/* Warm Hamburger Animation */
-body[data-theme='paper'] .hamburger:hover .hamburger-inner,
-body[data-theme='paper'] .hamburger:hover .hamburger-inner::before,
-body[data-theme='paper'] .hamburger:hover .hamburger-inner::after {
-  background: var(--accent-primary);
-  box-shadow: var(--glow-subtle);
+/* Warm Hamburger Animation - Mobile Safe */
+@media (hover: hover) {
+  body[data-theme='paper'] .hamburger:hover .hamburger-inner,
+  body[data-theme='paper'] .hamburger:hover .hamburger-inner::before,
+  body[data-theme='paper'] .hamburger:hover .hamburger-inner::after {
+    background: var(--accent-primary);
+    box-shadow: var(--glow-subtle);
+  }
 }
 
 /* Warm Footer */
@@ -1115,11 +1139,13 @@ body[data-theme='paper'] .toggle-details:focus {
   box-shadow: var(--shadow-md), var(--glow-subtle);
 }
 
-/* Warm Brand Hover */
-body[data-theme='paper'] .brand:hover {
-  color: var(--accent-primary);
-  text-shadow: var(--glow-subtle);
-  transition: all 0.3s ease;
+/* Warm Brand Hover - Mobile Safe */
+@media (hover: hover) {
+  body[data-theme='paper'] .brand:hover {
+    color: var(--accent-primary);
+    text-shadow: var(--glow-subtle);
+    transition: all 0.3s ease;
+  }
 }
 
 /* Enhanced Timeline */
@@ -1288,11 +1314,44 @@ body[data-theme='paper'] {
 .hamburger-inner:before{content:'';top:-7px}
 .hamburger-inner:after{content:'';top:7px}
 
-/* Mobile menu styles */
+/* === MOBILE-OPTIMIZED STYLES === */
 @media (max-width:900px){
-  .hamburger{display:inline-block}
+  /* Reset over-engineered animations on mobile */
+  * {
+    animation-duration: 0.3s !important;
+    transition-duration: 0.25s !important;
+  }
   
-  /* Mobile nav menu */
+  /* Disable hover effects on touch devices */
+  @media (hover: none) {
+    *:hover {
+      transform: none !important;
+      box-shadow: initial !important;
+      background: initial !important;
+      border-color: initial !important;
+    }
+    
+    .card:hover,
+    .project-card:hover,
+    .chip:hover,
+    .btn:hover,
+    .profile-pic:hover {
+      transform: none !important;
+      box-shadow: var(--shadow-md) !important;
+    }
+  }
+  
+  .hamburger{
+    display:inline-block;
+    /* Ensure proper touch target */
+    min-width:44px;
+    min-height:44px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  
+  /* Mobile nav menu - simplified for performance */
   .nav{
     display:none;
     position:absolute;
@@ -1300,28 +1359,52 @@ body[data-theme='paper'] {
     left:0;
     right:0;
     background:var(--card-bg);
-    backdrop-filter:blur(10px);
+    backdrop-filter:blur(8px);
     border-bottom:1px solid var(--card-border);
     box-shadow:0 4px 12px var(--card-shadow);
     padding:16px;
     flex-direction:column;
     gap:8px;
     z-index:1000;
+    /* Prevent animation interference */
+    animation:none !important;
+    transform:none !important;
   }
   
   .nav-open{
     display:flex !important;
+    /* Ensure immediate visibility */
+    animation:mobile-nav-open 0.2s ease-out !important;
+  }
+  
+  @keyframes mobile-nav-open {
+    0% { 
+      opacity:0; 
+      transform:translateY(-10px); 
+    }
+    100% { 
+      opacity:1; 
+      transform:translateY(0); 
+    }
   }
   
   .nav a{
-    padding:12px 16px;
+    padding:14px 16px;
     margin:0;
     border-radius:8px;
-    transition:background 0.2s;
+    transition:background-color 0.15s ease;
+    /* Proper touch targets */
+    min-height:44px;
+    display:flex;
+    align-items:center;
+    text-decoration:none;
+    color:var(--text-primary);
   }
   
-  .nav a:hover{
+  /* Touch-friendly active states */
+  .nav a:active{
     background:var(--nav-hover);
+    transform:scale(0.98);
   }
   
   .mobile-theme-switcher{
@@ -1335,10 +1418,162 @@ body[data-theme='paper'] {
     display:flex;
     width:100%;
     justify-content:center;
+    gap:8px;
+  }
+  
+  .mobile-theme-switcher .ts-btn{
+    min-width:44px;
+    min-height:44px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
   }
   
   .header{
     position:relative;
+    /* Prevent z-index issues */
+    z-index:100;
+  }
+  
+  /* Disable problematic animations on mobile */
+  .card,
+  .project-card,
+  .chip {
+    animation:none !important;
+  }
+  
+  /* Simplify shadows for performance */
+  .card,
+  .project-card {
+    box-shadow:0 2px 8px rgba(0,0,0,0.1) !important;
+  }
+  
+  /* Remove backdrop animations on mobile */
+  body::before {
+    display:none !important;
+  }
+  
+  /* Optimize scrollbar for mobile */
+  ::-webkit-scrollbar {
+    width:8px !important;
+  }
+  
+  /* Prevent layout shifts */
+  .container {
+    padding:20px;
+    gap:20px;
+  }
+  
+  /* === ADDITIONAL MOBILE PERFORMANCE FIXES === */
+  
+  /* Disable expensive CSS properties on mobile */
+  .card::before,
+  .card::after,
+  .project-card::before,
+  .project-card::after,
+  .chip::before,
+  .chip::after {
+    display: none !important;
+  }
+  
+  /* Simplify button effects */
+  .btn::before,
+  .btn::after {
+    display: none !important;
+  }
+  
+  /* Remove complex gradients on mobile */
+  .btn.primary {
+    background: var(--accent-primary) !important;
+  }
+  
+  /* Disable border animations */
+  @keyframes border-glow,
+  @keyframes warm-border-glow {
+    0%, 100% { 
+      border-image: none !important; 
+    }
+  }
+  
+  /* Mobile-specific touch improvements */
+  .nav a,
+  .ts-btn,
+  .hamburger {
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  
+  /* Prevent iOS zoom on input focus */
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+  
+  /* Prevent overscroll bounce */
+  body {
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Optimize for mobile browsers */
+  .header {
+    will-change: auto;
+  }
+  
+  .nav {
+    will-change: opacity, transform;
+  }
+  
+  /* Reduce motion for better performance */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+  
+  /* === FINAL MOBILE VALIDATION FIXES === */
+  
+  /* Fix any remaining z-index issues */
+  .nav {
+    position: fixed !important;
+    top: 70px !important;
+    z-index: 9999 !important;
+  }
+  
+  /* Ensure menu doesn't interfere with content */
+  .nav-open ~ * {
+    pointer-events: none;
+  }
+  
+  .nav-open .nav {
+    pointer-events: auto;
+  }
+  
+  /* Mobile-specific button fixes */
+  .hamburger {
+    z-index: 10000;
+    position: relative;
+  }
+  
+  /* Prevent scroll when menu is open */
+  body.menu-open {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+  }
+  
+  /* Touch-friendly spacing */
+  .nav a + .nav a {
+    margin-top: 4px;
+  }
+  
+  /* Prevent double-tap zoom on buttons */
+  button, .btn, .hamburger, .ts-btn {
+    touch-action: manipulation;
   }
 }
 

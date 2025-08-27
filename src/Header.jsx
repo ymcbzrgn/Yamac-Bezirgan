@@ -20,6 +20,13 @@ export default function Header({ contact, onThemeChange }) {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const handleThemeChangeAndCloseMenu = (theme) => {
+    onThemeChange(theme);
+    if (isMobile && isMenuOpen) {
+      setIsMenuOpen(false);
+    }
+  };
+
   return (
     <header className="header">
       <div className="brand">
@@ -33,7 +40,7 @@ export default function Header({ contact, onThemeChange }) {
         <a href="#contact" onClick={toggleMenu}>Contact</a>
         {isMobile && (
           <div className="mobile-theme-switcher">
-            <ThemeSwitcher onThemeChange={onThemeChange} />
+            <ThemeSwitcher onThemeChange={handleThemeChangeAndCloseMenu} />
           </div>
         )}
       </nav>
