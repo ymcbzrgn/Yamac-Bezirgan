@@ -1,0 +1,193 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>All Projects — Yamaç Bezirgan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;600&family=Noto+Serif+JP:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/extra-projects.css">
+    <style>
+      /* small page-specific tweaks */
+      .page-wrap{max-width:1100px;margin:36px auto;padding:20px}
+      .page-header{display:flex;align-items:center;justify-content:space-between;gap:16px}
+      .page-header h1{margin:0;font-family:'Noto Serif JP', 'Noto Sans JP'}
+      .search{border:1px solid rgba(0,0,0,0.06);padding:8px 12px;border-radius:10px;min-width:220px}
+      .projects-list{margin-top:20px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+      @media(max-width:900px){.projects-list{grid-template-columns:1fr}}
+      .notice{color:#666;font-size:13px;margin-top:12px}
+  .card-link{display:block;color:inherit;text-decoration:none}
+  /* Large centered overlay spinner */
+  .loading-overlay{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(255,255,255,0.85);z-index:1200}
+  .spinner-large{width:88px;height:88px;border-radius:50%;border:8px solid rgba(0,0,0,0.08);border-top-color:rgba(122,107,89,0.9);animation:spin 900ms linear infinite;margin-bottom:12px}
+  .loading-text{font-size:15px;color:rgba(0,0,0,0.6)}
+  @keyframes spin{to{transform:rotate(360deg)}}
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+      <div class="page-header">
+        <div style="display:flex;align-items:center;gap:12px">
+          <img src="/LOGO.png" alt="logo" style="height:40px;width:40px;object-fit:contain;border-radius:6px" onerror="this.style.display='none'"/>
+          <h1>All Projects</h1>
+        </div>
+        <input id="q" class="search" placeholder="Filter projects (name, description)..." />
+  <!-- loading indicator removed from header — a centered overlay is used instead -->
+      </div>
+
+      <div id="all-projects" class="projects-list" aria-live="polite"></div>
+      <!-- Large centered loading overlay shown while projects fetch -->
+      <div id="loadingOverlay" class="loading-overlay" role="status" aria-live="polite">
+        <div class="spinner-large" aria-hidden></div>
+        <div class="loading-text">Loading projects…</div>
+      </div>
+      <p class="notice">Note: GitHub's public API is rate-limited for anonymous requests; if projects fail to load, try again later.</p>
+    </div>
+
+  <script>
+      // Helper: test image availability by loading it
+      function tryImg(url){
+        return new Promise((res)=>{
+          const i = new Image();
+          i.onload = ()=>res(url);
+          i.onerror = ()=>res(null);
+          i.src = url;
+        });
+      }
+
+      async function findPreview(repo){
+        const owner = repo.owner && repo.owner.login;
+        const branch = repo.default_branch || 'main';
+        const name = encodeURIComponent(repo.name);
+        const exts = ['', '.png', '.jpg', '.jpeg', '.webp'];
+        if(owner){
+          for(const ext of exts){
+            const url = `https://raw.githubusercontent.com/${owner}/${name}/${branch}/portfolioWebsiteImage${ext}`;
+            const ok = await tryImg(url);
+            if(ok) return ok;
+          }
+        }
+        // local project assets
+        const localPng = `/projects/${repo.name}.png`;
+        const localJpg = `/projects/${repo.name}.jpg`;
+        const okLocal = await tryImg(localPng) || await tryImg(localJpg);
+        if(okLocal) return okLocal;
+        // final fallback to site logo
+        return '/LOGO.png';
+      }
+
+      async function render(){
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        // show loading overlay
+        if(loadingOverlay) loadingOverlay.style.display = 'flex';
+        const container = document.getElementById('all-projects');
+        container.innerHTML = '';
+        // lightweight loading skeleton
+        for(let i=0;i<6;i++){
+          const s = document.createElement('div');
+          s.className = 'card project-card';
+          s.style.opacity = 0.6;
+          s.innerHTML = '<div style="height:120px;background:linear-gradient(90deg,#f3f3f3,#ececec);"></div><div style="padding:12px"><div style="height:14px;width:60%;background:#eee;margin-bottom:8px"></div><div style="height:12px;width:90%;background:#f1f1f1"></div></div>';
+          container.appendChild(s);
+        }
+
+        try{
+          const res = await fetch('https://api.github.com/users/ymcbzrgn/repos?per_page=100&sort=updated');
+          if(!res.ok){
+            const txt = await res.text();
+            throw new Error(`GitHub API error ${res.status}: ${txt}`);
+          }
+          const data = await res.json();
+          const repos = Array.isArray(data) ? data.filter(r=>!r.fork).sort((a,b)=>new Date(b.updated_at)-new Date(a.updated_at)) : [];
+          container.innerHTML = '';
+          if(!repos.length){ container.innerHTML = '<div class="card">No public projects found.</div>'; 
+            // done loading
+            if(loadingOverlay) loadingOverlay.style.display = 'none';
+            return }
+
+          // render cards in parallel with image checks
+          const fragment = document.createDocumentFragment();
+          for(const repo of repos){
+            const preview = await findPreview(repo);
+            const card = document.createElement('a');
+            card.className = 'card-link';
+            card.href = repo.html_url;
+            card.target = '_blank';
+            card.rel = 'noopener noreferrer';
+
+            const cardBody = document.createElement('div');
+            cardBody.className = 'project-card';
+
+            if(preview){
+              const img = document.createElement('img');
+              img.className = 'project-media';
+              img.src = preview;
+              img.alt = `${repo.name} preview`;
+              img.onerror = ()=>{ img.style.display='none' };
+              cardBody.appendChild(img);
+            } else {
+              const placeholder = document.createElement('div');
+              placeholder.className = 'project-media';
+              cardBody.appendChild(placeholder);
+            }
+
+            const body = document.createElement('div');
+            body.className = 'project-body';
+            const h = document.createElement('h3');
+            h.textContent = repo.name;
+            const p = document.createElement('p');
+            p.className = 'muted small';
+            p.textContent = repo.description || '';
+            const actions = document.createElement('div');
+            actions.className = 'project-actions';
+            const repoBtn = document.createElement('a');
+            repoBtn.className = 'btn';
+            repoBtn.href = repo.html_url;
+            repoBtn.target = '_blank';
+            repoBtn.rel = 'noreferrer';
+            repoBtn.textContent = 'Repo';
+            actions.appendChild(repoBtn);
+            if(repo.homepage){
+              const demoBtn = document.createElement('a');
+              demoBtn.className = 'btn';
+              demoBtn.href = repo.homepage;
+              demoBtn.target = '_blank';
+              demoBtn.rel = 'noreferrer';
+              demoBtn.textContent = 'Demo';
+              actions.appendChild(demoBtn);
+            }
+
+            body.appendChild(h);
+            body.appendChild(p);
+            body.appendChild(actions);
+            cardBody.appendChild(body);
+            card.appendChild(cardBody);
+            fragment.appendChild(card);
+          }
+          container.appendChild(fragment);
+
+          // filter input
+          const q = document.getElementById('q');
+          q.addEventListener('input', (e)=>{
+            const v = e.target.value.toLowerCase();
+            const cards = container.querySelectorAll('.project-card');
+            repos.forEach((repo,i)=>{
+              const card = cards[i].closest('.card-link');
+              const text = (repo.name+' '+(repo.description||'')).toLowerCase();
+              card.style.display = text.includes(v) ? '' : 'none';
+            });
+          });
+
+          // done loading (success)
+          if(loadingOverlay) loadingOverlay.style.display = 'none';
+
+        }catch(e){
+          console.error(e);
+          container.innerHTML = '<div class="card">Failed to load projects (see console). GitHub may be rate-limiting requests.</div>';
+          // turn off loading overlay on error
+          if(loadingOverlay) loadingOverlay.style.display = 'none';
+        }
+      }
+      render();
+    </script>
+  </body>
+</html>
