@@ -83,8 +83,7 @@ const sections = {
     }
   ],
   skills: ['Python', 'TypeScript', 'React', 'Next.js', 'Node.js', 'REST APIs', 'PostgreSQL', 'MongoDB', 'Docker', 'Git', 'OAuth/JWT', 'CI/CD', 'Solution Architecture', 'API Architecture & Standards', 'Workflow Orchestration (n8n)', 'LLM Systems Orchestration', 'Prompt Engineering & Evaluation', 'Agile Delivery (Scrum/Kanban)', 'Automated Testing (Unit/Integration)', 'Requirements Analysis'],
-  certificates: ['Introduction to Big Data / BTK Academia', 'CEO Career Summit / Youthall', 'Preparing to My New Job / Kodluyoruz', '18.MÜYAK / Endüstri ve Verimlilik Kulübü'],
-  references: ['Adem ÖZTEMEL — adem.oztemel@arketic.ai', 'Cihan Meriç KAYMAZ — cihan.kaymaz@arketic.ai']
+  certificates: ['Introduction to Big Data / BTK Academia', 'CEO Career Summit / Youthall', 'Preparing to My New Job / Kodluyoruz', '18.MÜYAK / Endüstri ve Verimlilik Kulübü']
 };
 
 
@@ -139,7 +138,7 @@ export default function App() {
               'imdb-clone'
             ]} />
           </div>
-          <CertificatesReferences certificates={sections.certificates} references={sections.references} />
+          <CertificatesReferences certificates={sections.certificates} />
           <Contact contact={contact} />
         </div>
       </main>

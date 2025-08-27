@@ -13,35 +13,14 @@ function CertificateBadge({ text }){
   )
 }
 
-function ReferenceCard({ text }){
-  const [name, email] = text.split(' — ');
+export default function CertificatesReferences({ certificates }) {
   return (
-    <div className="ref-card corporate">
-      <div className="ref-avatar" aria-hidden>{name ? name.split(' ').map(n=>n[0]).slice(0,2).join('') : 'R'}</div>
-      <div className="ref-body">
-        <div className="ref-name mono">{name}</div>
-  <div className="muted small">{email}</div>
+    <Section title="Certificates">
+      <div className="cert-grid">
+        {certificates.map(c => (
+          <CertificateBadge key={c} text={c} />
+        ))}
       </div>
-    </div>
-  )
-}
-
-export default function CertificatesReferences({ certificates, references }) {
-  return (
-    <>
-      <Section title="Certificates">
-        <div className="cert-grid">
-          {certificates.map(c => (
-            <CertificateBadge key={c} text={c} />
-          ))}
-        </div>
-      </Section>
-
-      <Section title="References">
-        <div className="refs">
-          {references.map(r => <ReferenceCard key={r} text={r} />)}
-        </div>
-      </Section>
-    </>
+    </Section>
   );
 }
