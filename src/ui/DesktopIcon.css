@@ -1,0 +1,51 @@
+/**
+ * Desktop Icon Styles
+ * Ubuntu×XP Desktop Portfolio
+ */
+
+.desktop-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  padding: var(--spacing-sm);
+  border-radius: var(--border-radius);
+  user-select: none;
+  transition: background-color var(--transition-fast);
+}
+
+.desktop-icon:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.desktop-icon--selected {
+  background-color: rgba(99, 102, 241, 0.3);
+  border: 1px solid var(--color-primary);
+}
+
+.desktop-icon--dragging {
+  opacity: 0.7;
+  z-index: 1000;
+  cursor: grabbing !important;
+}
+
+.desktop-icon__image {
+  font-size: 3rem;
+  line-height: 1;
+  margin-bottom: var(--spacing-xs);
+}
+
+.desktop-icon__label {
+  font-size: 0.875rem;
+  color: var(--color-text-primary);
+  text-align: center;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+  word-break: break-word;
+  max-width: 100%;
+}
+
+.desktop-icon:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}

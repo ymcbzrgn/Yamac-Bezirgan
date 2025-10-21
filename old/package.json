@@ -1,0 +1,19 @@
+{
+  "name": "yamac-bezirgan-legacy",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Legacy portfolio site (archived)",
+  "scripts": {
+    "dev": "vite --config vite.config.legacy.ts",
+    "build": "vite build --config vite.config.legacy.ts",
+    "preview": "vite preview --config vite.config.legacy.ts"
+  },
+  "dependencies": {
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite": "^7.1.3"
+  }
+}

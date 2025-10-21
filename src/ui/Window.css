@@ -1,0 +1,282 @@
+/**
+ * Window Component Styles
+ * Ubuntu×XP Fusion Theme
+ */
+
+.window {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg, #ffffff);
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  pointer-events: auto;
+  will-change: transform;
+  transition: box-shadow 0.2s ease;
+}
+
+.window--focused {
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4), 0 0 0 2px rgba(255, 255, 255, 0.1);
+}
+
+.window--dragging {
+  transition: none;
+  cursor: grabbing;
+  user-select: none;
+}
+
+.window--maximized {
+  border-radius: 0;
+  width: 100vw !important;
+  height: 100vh !important;
+  transform: translate3d(0, 0, 0) !important;
+}
+
+/* Title Bar */
+.window__titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 36px;
+  padding: 0 12px;
+  background: var(--window-titlebar-bg);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  user-select: none;
+  flex-shrink: 0;
+  transition: background var(--transition-base);
+}
+
+.window--focused .window__titlebar {
+  background: var(--window-titlebar-focused);
+  color: var(--color-text-primary);
+}
+
+.window__titlebar-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.window__titlebar-right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.window__icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.window__title {
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: inherit;
+}
+
+/* Title Bar Buttons */
+.window__button {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #333333;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  padding: 0;
+}
+
+.window--focused .window__button {
+  color: #ffffff;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.window__button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+.window--focused .window__button:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.window__button--close:hover {
+  background: var(--color-error);
+  color: var(--color-text-primary);
+}
+
+.window__button:active {
+  transform: scale(0.95);
+}
+
+/* Content Area */
+.window__content {
+  flex: 1;
+  overflow: auto;
+  background: var(--color-bg, #ffffff);
+  position: relative;
+}
+
+.window__placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--color-text-secondary, #666666);
+  font-size: 14px;
+  font-style: italic;
+}
+
+/* Scrollbar Styling (Ubuntu-like) */
+.window__content::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+.window__content::-webkit-scrollbar-track {
+  background: #f0f0f0;
+}
+
+.window__content::-webkit-scrollbar-thumb {
+  background: #c0c0c0;
+  border-radius: 6px;
+  border: 2px solid #f0f0f0;
+}
+
+.window__content::-webkit-scrollbar-thumb:hover {
+  background: #a0a0a0;
+}
+
+/* Resize State */
+.window--resizing {
+  user-select: none;
+  transition: none;
+}
+
+.window--maximized {
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Resize Handles */
+.window__resize-handle {
+  position: absolute;
+  z-index: 10;
+  user-select: none;
+}
+
+/* Edge handles */
+.window__resize-handle--n {
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  cursor: n-resize;
+}
+
+.window__resize-handle--s {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  cursor: s-resize;
+}
+
+.window__resize-handle--e {
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  cursor: e-resize;
+}
+
+.window__resize-handle--w {
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  cursor: w-resize;
+}
+
+/* Corner handles (larger for easier grab) */
+.window__resize-handle--ne {
+  top: 0;
+  right: 0;
+  width: 12px;
+  height: 12px;
+  cursor: ne-resize;
+}
+
+.window__resize-handle--nw {
+  top: 0;
+  left: 0;
+  width: 12px;
+  height: 12px;
+  cursor: nw-resize;
+}
+
+.window__resize-handle--se {
+  bottom: 0;
+  right: 0;
+  width: 12px;
+  height: 12px;
+  cursor: se-resize;
+}
+
+.window__resize-handle--sw {
+  bottom: 0;
+  left: 0;
+  width: 12px;
+  height: 12px;
+  cursor: sw-resize;
+}
+
+/* Resize handle hover feedback (optional subtle effect) */
+.window--focused .window__resize-handle:hover {
+  background: rgba(247, 127, 0, 0.1);
+}
+
+/* Minimize/Maximize Button Specific Styles */
+.window__button--minimize {
+  font-size: 20px;
+  line-height: 0.5;
+}
+
+.window__button--maximize {
+  font-size: 16px;
+}
+
+.window__button--minimize:hover {
+  background: var(--color-info);
+  color: var(--color-text-primary);
+}
+
+.window--focused .window__button--minimize:hover {
+  background: var(--color-info-hover);
+  color: var(--color-text-primary);
+}
+
+.window__button--maximize:hover {
+  background: var(--color-success);
+  color: var(--color-text-primary);
+}
+
+.window--focused .window__button--maximize:hover {
+  background: var(--color-success-hover);
+  color: var(--color-text-primary);
+}

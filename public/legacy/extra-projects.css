@@ -1,0 +1,26 @@
+/* Copied minimal styles from src/styles.css for the standalone extra-projects page */
+/* This file allows public/extra-projects.html to render without needing the Vite-built CSS. Update only when styles change. */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;font-family: 'Noto Sans JP', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;background: linear-gradient(180deg,#fffaf6 0%, #fbfbfb 100%);color:#1f1f1f;-webkit-font-smoothing:antialiased}
+.page-wrap{max-width:1100px;margin:36px auto;padding:20px}
+.page-header{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.page-header h1{margin:0;font-family:'Noto Serif JP', 'Noto Sans JP'}
+.search{border:1px solid rgba(0,0,0,0.06);padding:8px 12px;border-radius:10px;min-width:220px}
+.projects-list{margin-top:20px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+@media(max-width:900px){.projects-list{grid-template-columns:1fr}}
+.notice{color:#666;font-size:13px;margin-top:12px}
+.card-link{display:block;color:inherit;text-decoration:none}
+.loading-overlay{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(255,255,255,0.85);z-index:1200}
+.spinner-large{width:88px;height:88px;border-radius:50%;border:8px solid rgba(0,0,0,0.08);border-top-color:rgba(122,107,89,0.9);animation:spin 900ms linear infinite;margin-bottom:12px}
+.loading-text{font-size:15px;color:rgba(0,0,0,0.6)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.card{background:rgba(255,255,255,0.9);padding:12px;border-radius:12px;border:1px solid rgba(0,0,0,0.04);box-shadow:0 6px 18px rgba(18,18,18,0.04)}
+.project-card{position:relative;overflow:hidden;padding:0;border-radius:12px;border:1px solid rgba(0,0,0,0.06);background:linear-gradient(180deg, rgba(255,255,255,0.9), rgba(250,248,244,0.9));display:flex;flex-direction:column}
+.project-media{height:140px;background:#eee;width:100%;object-fit:cover;display:block}
+.project-body{padding:12px}
+.project-body h3{margin:0;font-size:16px}
+.project-body p{margin:8px 0 0 0;color:#555;font-size:14px}
+.project-actions{display:flex;gap:8px;margin-top:12px}
+.btn{padding:8px 10px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);background:transparent;cursor:pointer;text-decoration:none;color:inherit}
+.btn:hover{background:rgba(0,0,0,0.02)}
