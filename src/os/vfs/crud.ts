@@ -47,6 +47,7 @@ export async function createNode(node: VFSNode, silentIfExists = false): Promise
          error.message?.includes('already exists'))) {
       if (silentIfExists) {
         console.log(`[VFS CRUD] ℹ️ Node already exists (race condition), skipping: ${node.name} (${node.id})`);
+        tx.done.catch(() => {}); // Suppress expected transaction abort
         return; // Silent success
       }
     }
