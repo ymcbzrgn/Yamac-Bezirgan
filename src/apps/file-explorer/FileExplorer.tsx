@@ -168,8 +168,7 @@ export default function FileExplorer({ windowId, nodeId }: FileExplorerProps) {
           meta: { url: node.targetUrl || '/legacy/index.html' },
         });
       } else if (node.mimeType?.startsWith('image/')) {
-        // TODO: Image viewer (future)
-        console.log('Image viewer not yet implemented');
+        openAppFromExplorer('image-viewer', node);
       } else {
         // Generic file - try text viewer
         openAppFromExplorer('text-viewer', node);

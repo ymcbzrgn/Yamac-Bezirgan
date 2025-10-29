@@ -12,6 +12,7 @@ import type { AppRegistry } from './types';
  */
 const appRegistry: AppRegistry = {
   'pdf-viewer': () => import('./pdf-viewer/PdfViewer'),
+  'image-viewer': () => import('./image-viewer/ImageViewer'),
   'browser': () => import('./browser/Browser'),
   'file-explorer': () => import('./file-explorer/FileExplorer'),
   'text-viewer': () => import('./text-viewer/TextViewer'),
