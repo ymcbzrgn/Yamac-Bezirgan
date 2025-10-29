@@ -533,17 +533,17 @@ Feel free to explore and interact with everything.
 
   // Profile image (reference to legacy folder)
   const profileImage: VFSNode = {
-    id: 'profile-webp',
+    id: 'profile-png',
     type: 'file',
-    name: 'profile.webp',
+    name: 'profile.png',
     parentId: 'pictures',
     createdAt: now,
     modifiedAt: now,
     icon: 'file-image',
     color: '#FF9800',
     size: 0,
-    mimeType: 'image/webp',
-    targetUrl: '/legacy/profile.webp', // Adjust path as needed
+    mimeType: 'image/png',
+    targetUrl: '/legacy/profile.png',
     readonly: true,
     hidden: false,
     starred: false,
