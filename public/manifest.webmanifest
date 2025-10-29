@@ -1,0 +1,70 @@
+{
+  "name": "Yamaç Bezirgan - Interactive Desktop Portfolio",
+  "short_name": "YB Portfolio",
+  "description": "Interactive desktop OS portfolio showcasing full-stack development, AI/ML integration, and creative engineering",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#5e2ca5",
+  "orientation": "any",
+  "scope": "/",
+  "lang": "en",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/desktop.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Desktop view with multiple windows"
+    },
+    {
+      "src": "/screenshots/mobile.png",
+      "sizes": "750x1334",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Mobile app launcher"
+    }
+  ],
+  "categories": ["portfolio", "productivity", "development"],
+  "shortcuts": [
+    {
+      "name": "Open CV",
+      "short_name": "CV",
+      "description": "View my CV",
+      "url": "/",
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "GitHub Projects",
+      "short_name": "Projects",
+      "description": "Browse my GitHub projects",
+      "url": "/",
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}
