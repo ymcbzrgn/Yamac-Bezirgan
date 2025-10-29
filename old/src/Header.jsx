@@ -35,7 +35,22 @@ export default function Header({ contact, onThemeChange }) {
       <nav className={`nav ${isMenuOpen ? 'nav-open' : ''}`}>
         <a href="#about" onClick={toggleMenu}>About</a>
         <a href="#experience" onClick={toggleMenu}>Experience</a>
-        <a href="/extra-projects.html" onClick={toggleMenu}>Projects</a>
+        <a
+          href="#"
+          onClick={(e) => {
+            e.preventDefault();
+            toggleMenu();
+            // Send message to parent OS to open new window
+            window.parent.postMessage({
+              type: 'OPEN_WINDOW',
+              appId: 'browser',
+              url: '/legacy/extra-projects.html',
+              title: 'All Projects'
+            }, '*');
+          }}
+        >
+          Projects
+        </a>
         <a href="#skills" onClick={toggleMenu}>Skills</a>
         <a href="#contact" onClick={toggleMenu}>Contact</a>
         {isMobile && (

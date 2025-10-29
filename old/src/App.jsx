@@ -118,7 +118,7 @@ export default function App() {
           <About contact={contact} about={sections.about} />
           <div className="card">
             <div className="cta">
-              <a className="btn primary" href="/YAMAÇ_BEZİRGAN.pdf" download>Download Resume</a>
+              <a className="btn primary" href="/legacy/YAMAÇ_BEZİRGAN.pdf" download>Download Resume</a>
               <a className="btn" href={`mailto:${contact.email}`}>Contact</a>
             </div>
           </div>

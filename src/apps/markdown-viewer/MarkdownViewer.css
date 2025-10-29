@@ -1,0 +1,244 @@
+/**
+ * MarkdownViewer Styles - GitHub-Inspired Markdown
+ */
+
+.markdown-viewer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #fff;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* Toolbar */
+.markdown-viewer__toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(to bottom, #f5f5f5 0%, #e8e8e8 100%);
+  border-bottom: 1px solid #b0b0b0;
+  padding: 6px 12px;
+  font-size: 12px;
+  color: #333;
+  font-weight: 500;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.markdown-viewer__toolbar-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.markdown-viewer__toolbar-title {
+  flex: 1;
+}
+
+/* Content Area */
+.markdown-viewer__content {
+  flex: 1;
+  overflow: auto;
+  padding: 24px 32px;
+  background: #fff;
+  color: #24292e;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica', 'Arial', sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* Typography */
+.markdown-viewer__content h1,
+.markdown-viewer__content h2,
+.markdown-viewer__content h3,
+.markdown-viewer__content h4,
+.markdown-viewer__content h5,
+.markdown-viewer__content h6 {
+  margin-top: 24px;
+  margin-bottom: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: #1a1a1a;
+}
+
+.markdown-viewer__content h1 {
+  font-size: 2em;
+  border-bottom: 1px solid #e1e4e8;
+  padding-bottom: 0.3em;
+}
+
+.markdown-viewer__content h2 {
+  font-size: 1.5em;
+  border-bottom: 1px solid #e1e4e8;
+  padding-bottom: 0.3em;
+}
+
+.markdown-viewer__content h3 {
+  font-size: 1.25em;
+}
+
+.markdown-viewer__content h4 {
+  font-size: 1em;
+}
+
+.markdown-viewer__content h5 {
+  font-size: 0.875em;
+}
+
+.markdown-viewer__content h6 {
+  font-size: 0.85em;
+  color: #6a737d;
+}
+
+/* Paragraphs */
+.markdown-viewer__content p {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+/* Lists */
+.markdown-viewer__content ul,
+.markdown-viewer__content ol {
+  margin-top: 0;
+  margin-bottom: 16px;
+  padding-left: 2em;
+}
+
+.markdown-viewer__content li {
+  margin-top: 0.25em;
+}
+
+.markdown-viewer__content li > p {
+  margin-bottom: 8px;
+}
+
+/* Links */
+.markdown-viewer__content a {
+  color: #0366d6;
+  text-decoration: none;
+}
+
+.markdown-viewer__content a:hover {
+  text-decoration: underline;
+}
+
+/* Code */
+.markdown-viewer__content code {
+  padding: 0.2em 0.4em;
+  margin: 0;
+  font-size: 85%;
+  background-color: rgba(27, 31, 35, 0.05);
+  border-radius: 3px;
+  font-family: 'Monaco', 'Menlo', 'Consolas', 'Courier New', monospace;
+}
+
+.markdown-viewer__content pre {
+  padding: 16px;
+  overflow: auto;
+  font-size: 85%;
+  line-height: 1.45;
+  background-color: #f6f8fa;
+  border-radius: 6px;
+  margin-bottom: 16px;
+}
+
+.markdown-viewer__content pre code {
+  display: inline;
+  max-width: auto;
+  padding: 0;
+  margin: 0;
+  overflow: visible;
+  line-height: inherit;
+  word-wrap: normal;
+  background-color: transparent;
+  border: 0;
+}
+
+/* Blockquotes */
+.markdown-viewer__content blockquote {
+  margin: 0 0 16px 0;
+  padding: 0 1em;
+  color: #6a737d;
+  border-left: 0.25em solid #dfe2e5;
+}
+
+.markdown-viewer__content blockquote > :first-child {
+  margin-top: 0;
+}
+
+.markdown-viewer__content blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+/* Horizontal Rules */
+.markdown-viewer__content hr {
+  height: 0.25em;
+  padding: 0;
+  margin: 24px 0;
+  background-color: #e1e4e8;
+  border: 0;
+}
+
+/* Tables */
+.markdown-viewer__content table {
+  border-collapse: collapse;
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.markdown-viewer__content table th,
+.markdown-viewer__content table td {
+  padding: 6px 13px;
+  border: 1px solid #dfe2e5;
+}
+
+.markdown-viewer__content table th {
+  font-weight: 600;
+  background-color: #f6f8fa;
+}
+
+.markdown-viewer__content table tr {
+  background-color: #fff;
+  border-top: 1px solid #c6cbd1;
+}
+
+.markdown-viewer__content table tr:nth-child(2n) {
+  background-color: #f6f8fa;
+}
+
+/* Strong/Bold */
+.markdown-viewer__content strong {
+  font-weight: 600;
+}
+
+/* Emphasis/Italic */
+.markdown-viewer__content em {
+  font-style: italic;
+}
+
+/* Strikethrough */
+.markdown-viewer__content del {
+  text-decoration: line-through;
+}
+
+/* Scrollbar Styling */
+.markdown-viewer__content::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+.markdown-viewer__content::-webkit-scrollbar-track {
+  background: #f0f0f0;
+}
+
+.markdown-viewer__content::-webkit-scrollbar-thumb {
+  background: #c0c0c0;
+  border: 1px solid #a0a0a0;
+  border-radius: 6px;
+}
+
+.markdown-viewer__content::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+.markdown-viewer__content::-webkit-scrollbar-corner {
+  background: #f0f0f0;
+}

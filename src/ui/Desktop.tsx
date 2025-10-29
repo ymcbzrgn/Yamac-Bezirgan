@@ -8,22 +8,29 @@ import { v4 as uuidv4 } from 'uuid';
 import {
   useVFSActions,
   useVFSNodesByParent,
+  useVFSNodes,
   useWindows,
   useWindowActions,
   useFocusedWindow,
   useStore,
+  useContextMenu,
+  useDesktopActions,
 } from '@os/store';
 import type { VFSNode } from '@os/types';
+import { getUniqueFolderName, getUniqueTextFileName } from '@os/utils/naming';
 import Window from './Window';
 import Taskbar from './Taskbar';
 import DesktopIcon from './DesktopIcon';
+import ContextMenu, { type MenuItem } from './ContextMenu';
 import './Desktop.css';
 
 export default function Desktop() {
-  const { loadVFS } = useVFSActions();
+  const { loadVFS, createNode } = useVFSActions();
   const desktopNodes = useVFSNodesByParent('root');
+  const allNodes = useVFSNodes();
   const windows = useWindows();
   const focusedWindow = useFocusedWindow();
+  const contextMenu = useContextMenu();
   const {
     openWindow,
     closeWindow,
@@ -44,18 +51,45 @@ export default function Desktop() {
     snapToGrid,
     selectIcon,
     clearSelection,
-  } = useStore((state) => ({
-    initializeIconPosition: state.initializeIconPosition,
-    updateTempDragPosition: state.updateTempDragPosition,
-    snapToGrid: state.snapToGrid,
-    selectIcon: state.selectIcon,
-    clearSelection: state.clearSelection,
-  }));
+    showContextMenu,
+    hideContextMenu,
+  } = useDesktopActions();
+  const { moveNode } = useVFSActions();
 
   // Load VFS on mount
   useEffect(() => {
     loadVFS();
   }, [loadVFS]);
+
+  // Listen for postMessage from iframe (e.g., legacy site opening new windows)
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      // Only accept messages from same origin for security
+      if (event.origin !== window.location.origin) return;
+
+      if (event.data?.type === 'OPEN_WINDOW') {
+        const { appId, url, title } = event.data;
+        openWindow({
+          id: uuidv4(),
+          appId: appId || 'browser',
+          title: title || 'Browser',
+          icon: '🌐',
+          bounds: {
+            x: (window.innerWidth - 900) / 2,
+            y: (window.innerHeight - 700) / 2,
+            width: 900,
+            height: 700,
+          },
+          state: 'normal',
+          createdAt: Date.now(),
+          meta: { url },
+        });
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, [openWindow]);
 
   // Initialize icon positions for desktop nodes
   useEffect(() => {
@@ -100,8 +134,16 @@ export default function Desktop() {
     let appId = 'placeholder';
     let meta: Record<string, any> = {};
 
-    if (node.type === 'file' && node.mimeType === 'application/pdf') {
+    // IMPORTANT: Check special folders BEFORE generic folder check!
+    if (node.id === 'projects') {
+      // Projects folder → GitHub Projects viewer (not file-explorer!)
+      appId = 'github-projects';
+    } else if (node.type === 'folder') {
+      // Other folders → File Explorer
+      appId = 'file-explorer';
+    } else if (node.type === 'file' && node.mimeType === 'application/pdf') {
       appId = 'pdf-viewer';
+      meta.fileUrl = node.targetUrl || '';
     } else if (node.type === 'link') {
       // Internal links (same-origin) → Browser app
       appId = 'browser';
@@ -134,6 +176,101 @@ export default function Desktop() {
     }
   };
 
+  // Desktop context menu
+  const handleDesktopContextMenu = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      e.preventDefault();
+      showContextMenu(null, e.clientX, e.clientY);
+    }
+  };
+
+  // Desktop drop handlers (for moving items back to desktop from folders)
+  const handleDesktopDragOver = (e: React.DragEvent) => {
+    // Only handle if dropping on empty space (not on an icon)
+    if ((e.target as HTMLElement).closest('.desktop-icon')) return;
+
+    if (e.dataTransfer.types.includes('application/vnd.desktop-node')) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+    }
+  };
+
+  const handleDesktopDrop = async (e: React.DragEvent) => {
+    // Only handle if dropping on empty space (not on an icon)
+    if ((e.target as HTMLElement).closest('.desktop-icon')) return;
+
+    e.preventDefault();
+
+    const draggedNodeId = e.dataTransfer.getData('application/vnd.desktop-node');
+    if (!draggedNodeId) return;
+
+    const draggedNode = allNodes[draggedNodeId];
+    if (!draggedNode) return;
+
+    // If node is not already on desktop root, move it there
+    if (draggedNode.parentId !== 'root') {
+      try {
+        await moveNode(draggedNodeId, 'root');
+        // Initialize desktop position for the moved node
+        initializeIconPosition(draggedNodeId, draggedNode.type as any);
+      } catch (error) {
+        console.error('Failed to move node to desktop:', error);
+        alert('Failed to move item to desktop');
+      }
+    }
+  };
+
+  // Context menu handlers
+  const handleNewFolder = async () => {
+    const name = getUniqueFolderName('root', allNodes);
+    const newFolder: VFSNode = {
+      id: uuidv4(),
+      type: 'folder',
+      name,
+      parentId: 'root',
+      icon: '📁',
+      createdAt: Date.now(),
+      modifiedAt: Date.now(),
+    };
+    await createNode(newFolder);
+    hideContextMenu();
+  };
+
+  const handleNewTextFile = async () => {
+    const name = getUniqueTextFileName('root', allNodes);
+    const newFile: VFSNode = {
+      id: uuidv4(),
+      type: 'file',
+      name,
+      parentId: 'root',
+      icon: '📄',
+      mimeType: 'text/plain',
+      size: 0,
+      createdAt: Date.now(),
+      modifiedAt: Date.now(),
+    };
+    await createNode(newFile);
+    hideContextMenu();
+  };
+
+  // Build context menu items
+  const getDesktopMenuItems = (): MenuItem[] => {
+    return [
+      {
+        id: 'new-folder',
+        label: 'New Folder',
+        icon: '📁',
+        onClick: handleNewFolder,
+      },
+      {
+        id: 'new-text',
+        label: 'New Text File',
+        icon: '📄',
+        onClick: handleNewTextFile,
+      },
+    ];
+  };
+
   // Get icon position (temp drag position or layout position)
   const getIconPosition = (nodeId: string) => {
     if (tempDragPosition && tempDragPosition.nodeId === nodeId) {
@@ -143,7 +280,13 @@ export default function Desktop() {
   };
 
   return (
-    <div className="desktop-container" onClick={handleDesktopClick}>
+    <div
+      className="desktop-container"
+      onClick={handleDesktopClick}
+      onContextMenu={handleDesktopContextMenu}
+      onDragOver={handleDesktopDragOver}
+      onDrop={handleDesktopDrop}
+    >
       {/* Wallpaper */}
       <div className="desktop-wallpaper" />
 
@@ -180,6 +323,16 @@ export default function Desktop() {
           />
         ))}
       </div>
+
+      {/* Context Menu */}
+      {contextMenu && contextMenu.targetNodeId === null && (
+        <ContextMenu
+          x={contextMenu.x}
+          y={contextMenu.y}
+          items={getDesktopMenuItems()}
+          onClose={hideContextMenu}
+        />
+      )}
 
       {/* Taskbar */}
       <Taskbar />

@@ -1,0 +1,26 @@
+/**
+ * Mobile OS Styles
+ * Main mobile container
+ */
+
+.mobile-os {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Swipe-up trigger (bottom edge) */
+.mobile-os__switcher-trigger {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 20px;
+  z-index: 1000;
+  pointer-events: auto;
+  -webkit-tap-highlight-color: transparent;
+}

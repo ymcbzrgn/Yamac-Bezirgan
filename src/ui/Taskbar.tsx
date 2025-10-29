@@ -7,6 +7,7 @@
 
 import { useState, useEffect } from 'react';
 import { useWindows, useFocusedWindow, useWindowActions } from '@os/store';
+import { getIconDisplay } from '../os/utils/iconMap';
 import './Taskbar.css';
 
 const MAX_VISIBLE_WINDOWS = 10;
@@ -61,7 +62,7 @@ export default function Taskbar() {
               onClick={() => handleTaskbarItemClick(window.id, window.state)}
               title={window.title}
             >
-              {window.icon && <span className="taskbar__item-icon">{window.icon}</span>}
+              {window.icon && <span className="taskbar__item-icon">{getIconDisplay(window.icon)}</span>}
               <span className="taskbar__item-title">{window.title}</span>
             </div>
           );

@@ -7,7 +7,7 @@ export default function About({ contact, about }) {
       <div className="profile-pic" aria-hidden>
         {!imgError ? (
           <img
-            src="/ME.png"
+            src="/legacy/ME.png"
             alt={`${contact.name}`}
             className="profile-img"
             onError={() => setImgError(true)}

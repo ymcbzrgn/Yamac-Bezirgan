@@ -4,6 +4,7 @@
  */
 
 import { StateCreator } from 'zustand';
+import { getDefaultIconLayout } from '../vfs/seed';
 
 /**
  * Icon position with grid coordinates
@@ -26,6 +27,15 @@ export interface GridSize {
 }
 
 /**
+ * Context menu state
+ */
+export interface ContextMenuState {
+  x: number;
+  y: number;
+  targetNodeId: string | null; // null = desktop empty space
+}
+
+/**
  * Desktop state interface
  */
 export interface DesktopSlice {
@@ -34,6 +44,7 @@ export interface DesktopSlice {
   gridSize: GridSize;
   selectedIconIds: string[];
   tempDragPosition: { nodeId: string; x: number; y: number } | null;
+  contextMenu: ContextMenuState | null;
 
   // Grid calculations
   getGridCellSize: () => { cellWidth: number; cellHeight: number };
@@ -44,10 +55,13 @@ export interface DesktopSlice {
   initializeIconPosition: (nodeId: string, type: IconPosition['type']) => void;
   updateTempDragPosition: (nodeId: string, x: number, y: number) => void;
   snapToGrid: (nodeId: string) => void;
+  removeIconPosition: (nodeId: string) => void;
   selectIcon: (iconId: string, multi?: boolean) => void;
   clearSelection: () => void;
   autoArrangeIcons: () => void;
   updateGridSize: (columns: number, rows: number) => void;
+  showContextMenu: (nodeId: string | null, x: number, y: number) => void;
+  hideContextMenu: () => void;
 }
 
 /**
@@ -61,9 +75,10 @@ export const createDesktopSlice: StateCreator<
 > = (set, get) => ({
   // Initial state
   layout: {},
-  gridSize: { columns: 8, rows: 6 },
+  gridSize: { columns: 16, rows: 10 }, // Increased for tighter icon spacing
   selectedIconIds: [],
   tempDragPosition: null,
+  contextMenu: null,
 
   // Grid calculations
   getGridCellSize: () => {
@@ -118,7 +133,7 @@ export const createDesktopSlice: StateCreator<
     return null; // No empty cell found
   },
 
-  // Initialize icon position (auto-assign first empty cell)
+  // Initialize icon position (use default layout, then auto-assign if needed)
   initializeIconPosition: (nodeId, type) =>
     set((state) => {
       // Check if already positioned
@@ -126,7 +141,26 @@ export const createDesktopSlice: StateCreator<
 
       const { cellWidth, cellHeight } = state.getGridCellSize();
 
-      // Find first empty cell
+      // Priority 1: Use default layout if defined for this icon
+      const defaultLayout = getDefaultIconLayout();
+      if (defaultLayout[nodeId]) {
+        const { x: gridX, y: gridY } = defaultLayout[nodeId];
+        return {
+          layout: {
+            ...state.layout,
+            [nodeId]: {
+              id: nodeId,
+              x: gridX * cellWidth,
+              y: gridY * cellHeight,
+              gridX,
+              gridY,
+              type,
+            },
+          },
+        };
+      }
+
+      // Priority 2: Auto-assign to first empty cell
       for (let y = 0; y < state.gridSize.rows; y++) {
         for (let x = 0; x < state.gridSize.columns; x++) {
           if (!state.isGridCellOccupied(x, y)) {
@@ -147,7 +181,7 @@ export const createDesktopSlice: StateCreator<
         }
       }
 
-      // If grid full, place at (0, 0) with overlap
+      // Priority 3: If grid full, place at (0, 0) with overlap
       return {
         layout: {
           ...state.layout,
@@ -231,6 +265,15 @@ export const createDesktopSlice: StateCreator<
       };
     }),
 
+  // Remove icon position from layout (when moved to folder)
+  removeIconPosition: (nodeId) =>
+    set((state) => {
+      const { [nodeId]: removed, ...remainingLayout } = state.layout;
+      return {
+        layout: remainingLayout,
+      };
+    }),
+
   // Select icon
   selectIcon: (iconId, multi = false) =>
     set((state) => {
@@ -304,5 +347,17 @@ export const createDesktopSlice: StateCreator<
         gridSize: newGridSize,
         layout: newLayout,
       };
+    }),
+
+  // Show context menu
+  showContextMenu: (nodeId, x, y) =>
+    set({
+      contextMenu: { x, y, targetNodeId: nodeId },
+    }),
+
+  // Hide context menu
+  hideContextMenu: () =>
+    set({
+      contextMenu: null,
     }),
 });

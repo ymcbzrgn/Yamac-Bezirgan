@@ -38,7 +38,7 @@ function RepoCard({ repo }){
 
       // 3) Final fallback to site logo
       if(!found){
-        found = '/LOGO.png';
+        found = '/legacy/LOGO.png';
       }
 
       setImgSrc(found);

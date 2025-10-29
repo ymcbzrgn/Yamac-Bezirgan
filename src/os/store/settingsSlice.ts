@@ -36,6 +36,7 @@ const DEFAULT_SETTINGS: Settings = {
 
   // Icon Pack
   iconPack: 'ubuntu',
+  iconSize: 'small', // Desktop icon size (extra-small: 60px, small: 80px, medium: 100px, large: 120px)
 
   // Language
   language: 'tr',

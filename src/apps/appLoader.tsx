@@ -13,9 +13,25 @@ import type { AppRegistry } from './types';
 const appRegistry: AppRegistry = {
   'pdf-viewer': () => import('./pdf-viewer/PdfViewer'),
   'browser': () => import('./browser/Browser'),
-  // Future apps:
-  // 'github-viewer': () => import('./github-viewer/GithubViewer'),
-  // 'snake': () => import('./games/Snake'),
+  'file-explorer': () => import('./file-explorer/FileExplorer'),
+  'text-viewer': () => import('./text-viewer/TextViewer'),
+  'markdown-viewer': () => import('./markdown-viewer/MarkdownViewer'),
+  'github-projects': () => import('./github-projects/GitHubProjects'),
+  'properties-modal': () => import('./properties-modal/PropertiesModal'),
+  'folder-placeholder': () => import('./placeholder/FolderPlaceholder'), // Deprecated, use file-explorer
+  // Games (Phase 4)
+  'snake-game': () => import('./games/Snake'),
+  'tetris-game': () => import('./games/Tetris'),
+  '2048-game': () => import('./games/Game2048'),
+  'minesweeper-game': () => import('./games/Minesweeper'),
+  // Utility Apps (Phase 5)
+  'settings-app': () => import('./settings/Settings'),
+  'calculator-app': () => import('./calculator/Calculator'),
+  'notes-app': () => import('./notes/Notes'),
+  'calendar-app': () => import('./calendar/Calendar'),
+  'terminal-app': () => import('./terminal/Terminal'),
+  'music-player-app': () => import('./music-player/MusicPlayer'),
+  'photo-gallery-app': () => import('./photo-gallery/PhotoGallery'),
 };
 
 /**

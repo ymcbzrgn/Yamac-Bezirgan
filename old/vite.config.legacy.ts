@@ -7,6 +7,9 @@ import { resolve } from 'path';
 export default defineConfig({
   root: resolve(__dirname),
 
+  // CRITICAL: Base path for assets (so they resolve to /legacy/assets/ instead of /assets/)
+  base: '/legacy/',
+
   plugins: [react()],
 
   build: {

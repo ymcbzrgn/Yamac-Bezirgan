@@ -1,0 +1,58 @@
+/**
+ * Status Bar Styles (Mobile)
+ * iOS/Android style status bar at top of screen
+ */
+
+.status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 44px;
+  padding: 0 16px;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  /* iOS safe area support */
+  padding-top: env(safe-area-inset-top);
+}
+
+.status-bar__left,
+.status-bar__right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-bar__time {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  letter-spacing: -0.02em;
+}
+
+.status-bar__icon {
+  font-size: 16px;
+  line-height: 1;
+  filter: grayscale(100%) brightness(10);
+}
+
+/* Dark glass effect on scroll */
+.status-bar--scrolled {
+  background: rgba(0, 0, 0, 0.95);
+}
+
+/* Light mode variant (optional) */
+.status-bar--light {
+  background: rgba(255, 255, 255, 0.9);
+  color: #000000;
+}
+
+.status-bar--light .status-bar__icon {
+  filter: grayscale(100%) brightness(0.3);
+}

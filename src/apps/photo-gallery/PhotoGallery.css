@@ -1,0 +1,352 @@
+/**
+ * Photo Gallery App Styles
+ * MacOS Photos.app inspired design
+ */
+
+.photo-gallery-app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--bg-secondary, #fff);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* ========== Empty State ========== */
+.photo-gallery-app__empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+  text-align: center;
+  color: var(--text-secondary, #666);
+}
+
+.photo-gallery-app__empty-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.photo-gallery-app__empty h3 {
+  margin: 0 0 8px 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary, #333);
+}
+
+.photo-gallery-app__empty p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-secondary, #666);
+}
+
+/* ========== Toolbar ========== */
+.photo-gallery-app__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  background: var(--bg-primary, #f5f5f5);
+  border-bottom: 1px solid var(--border-primary, #ddd);
+}
+
+.photo-gallery-app__toolbar-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary, #333);
+}
+
+/* ========== Main Viewer ========== */
+.photo-gallery-app__viewer {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-primary, #f5f5f5);
+  overflow: hidden;
+}
+
+.photo-gallery-app__image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  user-select: none;
+  border-radius: 4px;
+  box-shadow: 0 8px 24px var(--shadow, rgba(0, 0, 0, 0.15));
+  animation: fadeIn 0.25s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ========== Overlay Info ========== */
+.photo-gallery-app__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, transparent 100%);
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.photo-gallery-app__viewer:hover .photo-gallery-app__overlay {
+  opacity: 1;
+}
+
+.photo-gallery-app__filename {
+  font-size: 14px;
+  font-weight: 500;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.photo-gallery-app__counter {
+  font-size: 13px;
+  font-weight: 500;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  padding: 6px 12px;
+  border-radius: 12px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* ========== Navigation Arrows (MacOS Style) ========== */
+.photo-gallery-app__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border: none;
+  border-radius: 50%;
+  color: var(--text-primary, #333);
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  opacity: 0;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.photo-gallery-app__viewer:hover .photo-gallery-app__nav {
+  opacity: 1;
+}
+
+.photo-gallery-app__nav:hover {
+  background: #fff;
+  transform: translateY(-50%) scale(1.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.photo-gallery-app__nav:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.photo-gallery-app__nav--prev {
+  left: 20px;
+}
+
+.photo-gallery-app__nav--next {
+  right: 20px;
+}
+
+/* ========== Controls Bar (MacOS Style) ========== */
+.photo-gallery-app__controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px 20px;
+  background: var(--bg-secondary, #fff);
+  border-top: 1px solid var(--border-primary, #ddd);
+}
+
+.photo-gallery-app__button {
+  padding: 8px 16px;
+  background: var(--bg-primary, #f5f5f5);
+  border: 1px solid var(--border-primary, #ddd);
+  border-radius: 6px;
+  color: var(--text-primary, #333);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.photo-gallery-app__button:hover {
+  background: var(--bg-tertiary, #e0e0e0);
+}
+
+.photo-gallery-app__button:active {
+  transform: scale(0.97);
+}
+
+.photo-gallery-app__button--play {
+  background: var(--accent-primary, #ff6b35);
+  border-color: var(--accent-primary, #ff6b35);
+  color: #fff;
+}
+
+.photo-gallery-app__button--play:hover {
+  background: var(--accent-secondary, #874DA7);
+  border-color: var(--accent-secondary, #874DA7);
+}
+
+/* ========== Thumbnails Bar (MacOS Style) ========== */
+.photo-gallery-app__thumbnails {
+  display: flex;
+  gap: 8px;
+  padding: 16px 20px;
+  background: var(--bg-secondary, #fff);
+  border-top: 1px solid var(--border-primary, #ddd);
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* MacOS-style scrollbar */
+.photo-gallery-app__thumbnails::-webkit-scrollbar {
+  height: 8px;
+}
+
+.photo-gallery-app__thumbnails::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.photo-gallery-app__thumbnails::-webkit-scrollbar-thumb {
+  background: var(--border-primary, #ddd);
+  border-radius: 4px;
+}
+
+.photo-gallery-app__thumbnails::-webkit-scrollbar-thumb:hover {
+  background: var(--border-secondary, #ccc);
+}
+
+.photo-gallery-app__thumbnail {
+  position: relative;
+  flex-shrink: 0;
+  width: 70px;
+  height: 70px;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: var(--bg-primary, #f5f5f5);
+}
+
+.photo-gallery-app__thumbnail:hover {
+  border-color: var(--border-primary, #ddd);
+  transform: scale(1.05);
+}
+
+.photo-gallery-app__thumbnail--active {
+  border-color: var(--accent-primary, #ff6b35);
+  box-shadow: 0 0 0 1px var(--accent-primary, #ff6b35);
+}
+
+.photo-gallery-app__thumbnail-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+}
+
+.photo-gallery-app__thumbnail-indicator {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 6px;
+  height: 6px;
+  background: var(--accent-primary, #ff6b35);
+  border-radius: 50%;
+  box-shadow: 0 0 4px rgba(255, 107, 53, 0.8);
+}
+
+/* ========== Responsive ========== */
+@media (max-width: 768px) {
+  .photo-gallery-app__toolbar {
+    padding: 10px 16px;
+  }
+
+  .photo-gallery-app__toolbar-title {
+    font-size: 14px;
+  }
+
+  .photo-gallery-app__nav {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+  }
+
+  .photo-gallery-app__nav--prev {
+    left: 12px;
+  }
+
+  .photo-gallery-app__nav--next {
+    right: 12px;
+  }
+
+  .photo-gallery-app__controls {
+    padding: 12px 16px;
+    gap: 8px;
+  }
+
+  .photo-gallery-app__button {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .photo-gallery-app__thumbnails {
+    padding: 12px 16px;
+    gap: 6px;
+  }
+
+  .photo-gallery-app__thumbnail {
+    width: 60px;
+    height: 60px;
+  }
+
+  .photo-gallery-app__overlay {
+    padding: 16px;
+  }
+
+  .photo-gallery-app__filename,
+  .photo-gallery-app__counter {
+    font-size: 12px;
+  }
+}
+
+/* ========== Smooth Transitions ========== */
+* {
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ========== Accessibility ========== */
+@media (prefers-reduced-motion: reduce) {
+  .photo-gallery-app__image,
+  .photo-gallery-app__nav,
+  .photo-gallery-app__thumbnail {
+    animation: none;
+    transition: none;
+  }
+}

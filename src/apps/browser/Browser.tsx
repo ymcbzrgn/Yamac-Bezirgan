@@ -60,7 +60,7 @@ export default function Browser({ windowId, url }: BrowserProps) {
       {!embedError && (
         <iframe
           src={currentUrl}
-          sandbox="allow-scripts allow-same-origin allow-popups"
+          sandbox="allow-scripts allow-same-origin allow-popups allow-downloads"
           referrerPolicy="no-referrer"
           title="Embedded Browser"
           className="browser__iframe"

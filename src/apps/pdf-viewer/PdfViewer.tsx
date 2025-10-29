@@ -40,6 +40,13 @@ export default function PdfViewer({ fileUrl, windowId }: PdfViewerProps) {
         return;
       }
 
+      // Validate fileUrl
+      if (!fileUrl || fileUrl.trim() === '') {
+        setError('No PDF file provided. Please select a PDF file.');
+        setLoading(false);
+        return;
+      }
+
       try {
         setLoading(true);
         setError(null);

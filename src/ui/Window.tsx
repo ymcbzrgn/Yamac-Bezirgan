@@ -8,6 +8,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { WindowState } from '../os/types';
 import { useVFSNodes } from '../os/store';
+import { getIconDisplay } from '../os/utils/iconMap';
 import AppLoader from '../apps/appLoader';
 import './Window.css';
 
@@ -302,7 +303,7 @@ export default function Window({
         style={{ cursor: dragState.isDragging ? 'grabbing' : isMaximized ? 'default' : 'grab' }}
       >
         <div className="window__titlebar-left">
-          {window.icon && <span className="window__icon">{window.icon}</span>}
+          {window.icon && <span className="window__icon">{getIconDisplay(window.icon)}</span>}
           <span className="window__title">{window.title}</span>
         </div>
         <div className="window__titlebar-right">
@@ -337,11 +338,7 @@ export default function Window({
             appId={window.appId}
             windowId={window.id}
             nodeId={window.nodeId}
-            // Pass fileUrl for PDF viewer from VFS node's targetUrl
-            {...(window.appId === 'pdf-viewer' && window.nodeId
-              ? { fileUrl: vfsNodes[window.nodeId]?.targetUrl || '' }
-              : {})}
-            // Pass all meta props (for browser app, etc.)
+            // Pass all meta props (for browser app, pdf-viewer fileUrl, etc.)
             {...(window.meta || {})}
           />
         )}

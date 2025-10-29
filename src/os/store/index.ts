@@ -57,6 +57,7 @@ export const useStore = create<AppStore>()(
 export const useIconLayout = () => useStore((state) => state.layout);
 export const useSelectedIcons = () => useStore((state) => state.selectedIconIds);
 export const useGridSize = () => useStore((state) => state.gridSize);
+export const useContextMenu = () => useStore((state) => state.contextMenu);
 
 // Windows selectors
 export const useWindows = () => useStore((state) => state.windows);
@@ -90,10 +91,13 @@ export const useDesktopActions = () =>
     initializeIconPosition: state.initializeIconPosition,
     updateTempDragPosition: state.updateTempDragPosition,
     snapToGrid: state.snapToGrid,
+    removeIconPosition: state.removeIconPosition,
     selectIcon: state.selectIcon,
     clearSelection: state.clearSelection,
     autoArrangeIcons: state.autoArrangeIcons,
     updateGridSize: state.updateGridSize,
+    showContextMenu: state.showContextMenu,
+    hideContextMenu: state.hideContextMenu,
   }));
 
 export const useWindowActions = () =>

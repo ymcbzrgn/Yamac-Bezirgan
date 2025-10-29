@@ -252,11 +252,12 @@ export const createVFSSlice: StateCreator<VFSSlice, [], [], VFSSlice> = (
 
   /**
    * Get all children of a parent (from in-memory cache)
+   * Filters out hidden nodes
    */
   getNodesByParent: (parentId: string | null) => {
     const state = get();
     return Object.values(state.nodes).filter(
-      (node) => node.parentId === parentId
+      (node) => node.parentId === parentId && !node.hidden
     );
   },
 

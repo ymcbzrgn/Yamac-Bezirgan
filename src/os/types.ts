@@ -148,6 +148,7 @@ export interface Settings {
 
   // Icon Pack
   iconPack: 'ubuntu' | 'xp' | 'macos' | 'custom';
+  iconSize: 'extra-small' | 'small' | 'medium' | 'large'; // Desktop icon size
 
   // Language
   language: 'en' | 'tr';

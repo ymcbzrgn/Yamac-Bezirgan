@@ -1,0 +1,249 @@
+/**
+ * Minesweeper Game Styles
+ * Classic Windows Minesweeper aesthetic
+ */
+
+.minesweeper-game {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #c0c0c0;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* ========== Header ========== */
+.minesweeper-game__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: #c0c0c0;
+  border-bottom: 2px solid #7b7b7b;
+  border-top: 2px solid #fff;
+  border-left: 2px solid #fff;
+  border-right: 2px solid #7b7b7b;
+  margin: 8px 8px 0 8px;
+  box-shadow: inset -1px -1px 0 #808080, inset 1px 1px 0 #dfdfdf;
+}
+
+.minesweeper-game__flag-count,
+.minesweeper-game__info {
+  background: #000;
+  color: #ff0000;
+  font-size: 24px;
+  font-weight: 700;
+  padding: 4px 8px;
+  min-width: 60px;
+  text-align: center;
+  border: 2px inset #808080;
+  font-family: 'Courier New', monospace;
+}
+
+.minesweeper-game__reset-btn {
+  width: 40px;
+  height: 40px;
+  background: #c0c0c0;
+  border: 3px outset #fff;
+  border-radius: 2px;
+  font-size: 24px;
+  cursor: pointer;
+  transition: all 0.05s;
+  padding: 0;
+}
+
+.minesweeper-game__reset-btn:hover {
+  background: #d0d0d0;
+}
+
+.minesweeper-game__reset-btn:active {
+  border-style: inset;
+  background: #a0a0a0;
+}
+
+/* ========== Container ========== */
+.minesweeper-game__container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 8px;
+}
+
+/* ========== Grid ========== */
+.minesweeper-game__grid {
+  display: grid;
+  grid-template-columns: repeat(9, 30px);
+  grid-template-rows: repeat(9, 30px);
+  gap: 0;
+  background: #c0c0c0;
+  border: 3px solid #7b7b7b;
+  border-top-color: #fff;
+  border-left-color: #fff;
+  box-shadow: inset -1px -1px 0 #808080, inset 1px 1px 0 #dfdfdf;
+  padding: 3px;
+}
+
+/* ========== Cells ========== */
+.minesweeper-game__cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background: #c0c0c0;
+  border: 2px outset #fff;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  user-select: none;
+}
+
+.minesweeper-game__cell:hover {
+  background: #d0d0d0;
+}
+
+.minesweeper-game__cell:active {
+  border-style: inset;
+  background: #a0a0a0;
+}
+
+/* Revealed cells */
+.minesweeper-game__cell--revealed {
+  background: #bdbdbd;
+  border: 1px solid #7b7b7b;
+  border-top-color: #808080;
+  border-left-color: #808080;
+  cursor: default;
+}
+
+.minesweeper-game__cell--revealed:hover {
+  background: #bdbdbd;
+}
+
+/* Mine cell */
+.minesweeper-game__cell--mine {
+  background: #ff0000;
+  font-size: 20px;
+}
+
+/* Number colors (classic Minesweeper) */
+.minesweeper-game__cell--number-1 {
+  color: #0000ff; /* Blue */
+}
+
+.minesweeper-game__cell--number-2 {
+  color: #008000; /* Green */
+}
+
+.minesweeper-game__cell--number-3 {
+  color: #ff0000; /* Red */
+}
+
+.minesweeper-game__cell--number-4 {
+  color: #000080; /* Dark Blue / Purple */
+}
+
+.minesweeper-game__cell--number-5 {
+  color: #800000; /* Maroon */
+}
+
+.minesweeper-game__cell--number-6 {
+  color: #008080; /* Cyan */
+}
+
+.minesweeper-game__cell--number-7 {
+  color: #000000; /* Black */
+}
+
+.minesweeper-game__cell--number-8 {
+  color: #808080; /* Gray */
+}
+
+/* ========== Overlay (Win / Game Over) ========== */
+.minesweeper-game__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(192, 192, 192, 0.95);
+  backdrop-filter: blur(4px);
+  gap: 16px;
+  z-index: 10;
+}
+
+.minesweeper-game__overlay-title {
+  margin: 0;
+  font-size: 36px;
+  font-weight: 700;
+  color: #000;
+  text-shadow: 2px 2px 0 #fff;
+}
+
+.minesweeper-game__overlay-text {
+  margin: 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.minesweeper-game__overlay-btn {
+  padding: 10px 24px;
+  background: #c0c0c0;
+  border: 3px outset #fff;
+  border-radius: 0;
+  color: #000;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.05s;
+}
+
+.minesweeper-game__overlay-btn:hover {
+  background: #d0d0d0;
+}
+
+.minesweeper-game__overlay-btn:active {
+  border-style: inset;
+  background: #a0a0a0;
+}
+
+/* ========== Footer ========== */
+.minesweeper-game__footer {
+  padding: 8px 12px;
+  background: #c0c0c0;
+  border-top: 2px solid #7b7b7b;
+  text-align: center;
+}
+
+.minesweeper-game__instructions {
+  margin: 0;
+  font-size: 12px;
+  color: #000;
+}
+
+/* ========== Responsive ========== */
+@media (max-width: 768px) {
+  .minesweeper-game__grid {
+    grid-template-columns: repeat(9, 25px);
+    grid-template-rows: repeat(9, 25px);
+  }
+
+  .minesweeper-game__cell {
+    width: 25px;
+    height: 25px;
+    font-size: 14px;
+  }
+
+  .minesweeper-game__cell--mine {
+    font-size: 16px;
+  }
+
+  .minesweeper-game__overlay-title {
+    font-size: 28px;
+  }
+}
