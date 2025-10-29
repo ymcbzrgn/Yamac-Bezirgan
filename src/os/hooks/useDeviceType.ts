@@ -53,11 +53,13 @@ export function useDeviceType(): DeviceType {
 }
 
 /**
- * Hook to check if device is mobile
+ * Hook to check if device is mobile (includes tablets for touch UX)
+ * Returns true for mobile (<768px) AND tablet (768-1023px)
+ * This ensures iPad and similar devices get mobile UI instead of desktop windows
  */
 export function useIsMobile(): boolean {
   const deviceType = useDeviceType();
-  return deviceType === 'mobile';
+  return deviceType === 'mobile' || deviceType === 'tablet';
 }
 
 /**

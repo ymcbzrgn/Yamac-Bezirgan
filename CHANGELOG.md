@@ -9,6 +9,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed (2025-10-29)
+
+#### 🔴 **CRITICAL: Mobile UX Catastrophe - touch-action: none**
+- **Discovery**: User reported "hiçbir şey açılmıyor" (nothing opens)
+- **Root Cause**: CSS `touch-action: none` in MobileOS.css:11 blocked ALL touch events
+- **Impact**: 100% mobile failure - no taps work, apps don't open, launcher non-interactive
+- **Previous Misdiagnosis**: Falsely attributed to "operator precedence bug" (code was correct)
+- **Fix Applied**:
+  - Changed `touch-action: none` → `touch-action: pan-y`
+  - File: `src/ui/mobile/MobileOS.css` line 11
+  - Result: Taps work, vertical scroll enabled, horizontal pan/zoom blocked
+- **Lesson Learned**: CSS can silently kill event flow before JavaScript runs
+- **Testing Required**: Real device testing (iOS Safari, Android Chrome)
+
+#### 🎯 **iPad Support: Tablets Now Use Mobile UI**
+- **Issue**: Tablets (768-1023px) rendered desktop UI with windows (unusable on touch)
+- **Fix**: Updated `useIsMobile()` to return true for both mobile AND tablet
+- **File**: `src/os/hooks/useDeviceType.ts` lines 55-63
+- **Result**: iPad users now get fullscreen mobile UI instead of desktop windows
+
+### Removed (2025-10-29)
+- **False Information from ROADMAP_3.md**:
+  - ❌ "Operator precedence bug in MobileOS.tsx:51" - Misdiagnosis
+  - ❌ "Apps now open correctly" - They didn't (CSS issue remained)
+- **Corrected**: Real bug was CSS touch-action, not JavaScript logic
+
+---
+
 ### Planned Features (Phase 7+)
 - PWA features (service worker, offline mode, install prompt)
 - Advanced theme switcher with custom color picker

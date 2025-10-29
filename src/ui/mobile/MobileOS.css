@@ -8,7 +8,7 @@
   height: 100vh;
   overflow: hidden;
   position: relative;
-  touch-action: none;
+  touch-action: pan-y; /* Allows taps + vertical scroll, blocks horizontal pan/zoom */
   -webkit-user-select: none;
   user-select: none;
 }
