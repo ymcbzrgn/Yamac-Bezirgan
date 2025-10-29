@@ -1,6 +1,23 @@
 /**
- * FileExplorer Component
- * Classic OS-style file manager with navigation and file viewing
+ * SHARED (ADAPTIVE) Component
+ *
+ * FileExplorer - Classic OS-style file manager with navigation and file viewing.
+ * Renders on both Desktop and Mobile with adaptive UX:
+ *
+ * Desktop (>=768px):
+ * - Double-click to open files/folders
+ * - Right-click context menu
+ * - Drag & drop support
+ * - Hover interactions
+ *
+ * Mobile (<768px):
+ * - Single tap to open
+ * - Long-press (500ms) for context menu
+ * - No drag & drop (gestures disabled)
+ * - Touch-optimized spacing (44px minimum targets)
+ * - 3-column grid layout
+ *
+ * Implementation: Uses isMobile hook for conditional event handlers and className.
  */
 
 import { useState, useMemo } from 'react';
@@ -539,7 +556,7 @@ export default function FileExplorer({ windowId, nodeId }: FileExplorerProps) {
   }
 
   return (
-    <div className="file-explorer">
+    <div className={`file-explorer${isMobile ? ' file-explorer--mobile' : ''}`}>
       {/* Toolbar */}
       <div className="file-explorer__toolbar">
         <button

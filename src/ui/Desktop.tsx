@@ -1,6 +1,14 @@
 /**
- * Desktop Component
- * Main desktop view with draggable icons and windows
+ * DESKTOP-ONLY Component
+ *
+ * Main desktop view with draggable icons and windows.
+ * This component is never rendered on mobile (<768px) - see MobileOS instead.
+ *
+ * Features:
+ * - Draggable desktop icons
+ * - Window management (drag, resize, minimize, maximize, z-index)
+ * - Taskbar with window list
+ * - Right-click context menus
  */
 
 import { useEffect } from 'react';

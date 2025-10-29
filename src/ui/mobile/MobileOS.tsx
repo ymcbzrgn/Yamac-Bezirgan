@@ -1,10 +1,15 @@
 /**
- * Mobile OS Main Component
- * Orchestrates mobile UI experience:
- * - App Launcher (home screen)
- * - Fullscreen Apps (with MobileAppShell)
- * - App Switcher (multitasking)
- * - State management for mobile navigation
+ * MOBILE-ONLY Component
+ *
+ * Mobile OS Main Component - orchestrates mobile UI experience.
+ * This component is never rendered on desktop (>=768px) - see Desktop instead.
+ *
+ * Features:
+ * - App Launcher (iOS-style home screen with grid layout)
+ * - Fullscreen Apps (with MobileAppShell container)
+ * - App Switcher (multitasking/recent apps view)
+ * - Custom event bus for app opening (mobile:openApp)
+ * - State management for mobile navigation (launcher/app/switcher)
  */
 
 import { useState, useEffect, useCallback } from 'react';

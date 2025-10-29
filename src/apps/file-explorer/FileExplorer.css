@@ -284,93 +284,92 @@
 }
 
 /* ========================================
-   MOBILE RESPONSIVE STYLES
+   MOBILE ADAPTIVE STYLES (Conditional Classes)
+   Applied via isMobile check in FileExplorer.tsx
    ======================================== */
 
-@media (max-width: 767px) {
-  /* Toolbar - Mobile adjustments */
-  .file-explorer__toolbar {
-    padding: 8px;
-    gap: 6px;
-  }
+/* Mobile modifier - Applied to root when isMobile === true */
+.file-explorer--mobile .file-explorer__toolbar {
+  padding: 8px;
+  gap: 6px;
+}
 
-  .file-explorer__back-btn {
-    width: 36px;
-    height: 36px;
-    font-size: 18px;
-  }
+.file-explorer--mobile .file-explorer__back-btn {
+  width: 36px;
+  height: 36px;
+  font-size: 18px;
+}
 
-  .file-explorer__breadcrumb {
-    font-size: 12px;
-  }
+.file-explorer--mobile .file-explorer__breadcrumb {
+  font-size: 12px;
+}
 
-  .file-explorer__breadcrumb-link {
-    padding: 6px 8px;
-    font-size: 12px;
-  }
+.file-explorer--mobile .file-explorer__breadcrumb-link {
+  padding: 6px 8px;
+  font-size: 12px;
+}
 
-  .file-explorer__breadcrumb-icon {
-    font-size: 16px;
-  }
+.file-explorer--mobile .file-explorer__breadcrumb-icon {
+  font-size: 16px;
+}
 
-  /* Content - Touch-friendly spacing */
-  .file-explorer__content {
-    padding: 12px;
-  }
+/* Content - Touch-friendly spacing */
+.file-explorer--mobile .file-explorer__content {
+  padding: 12px;
+}
 
-  /* Grid - 3 columns on mobile, larger cells */
-  .file-explorer__grid {
-    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-    gap: 12px;
-    padding: 4px;
-  }
+/* Grid - 3 columns on mobile, larger cells */
+.file-explorer--mobile .file-explorer__grid {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  padding: 4px;
+}
 
-  /* Item - Touch-optimized (44px minimum target) */
-  .file-explorer__item {
-    padding: 16px 12px;
-    min-height: 120px;
-    border-radius: 8px;
-    cursor: default; /* No pointer cursor on mobile */
+/* Item - Touch-optimized (44px minimum target) */
+.file-explorer--mobile .file-explorer__item {
+  padding: 16px 12px;
+  min-height: 120px;
+  border-radius: 8px;
+  cursor: default;
 
-    /* Prevent double-tap zoom */
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: transparent;
-    -webkit-touch-callout: none;
-    user-select: none;
-  }
+  /* Prevent double-tap zoom */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  user-select: none;
+}
 
-  /* Item icon - Larger on mobile */
-  .file-explorer__item-icon {
-    font-size: 56px;
-    margin-bottom: 10px;
-  }
+/* Item icon - Larger on mobile */
+.file-explorer--mobile .file-explorer__item-icon {
+  font-size: 56px;
+  margin-bottom: 10px;
+}
 
-  /* Item name - Larger text */
-  .file-explorer__item-name {
-    font-size: 13px;
-    line-height: 1.4;
-    -webkit-line-clamp: 3; /* Allow 3 lines on mobile */
-  }
+/* Item name - Larger text */
+.file-explorer--mobile .file-explorer__item-name {
+  font-size: 13px;
+  line-height: 1.4;
+  -webkit-line-clamp: 3;
+}
 
-  /* Rename input - Touch-friendly */
-  .file-explorer__item-rename-input {
-    font-size: 13px;
-    padding: 4px 6px;
-    min-height: 28px;
-  }
+/* Rename input - Touch-friendly */
+.file-explorer--mobile .file-explorer__item-rename-input {
+  font-size: 13px;
+  padding: 4px 6px;
+  min-height: 28px;
+}
 
-  /* Status bar - Mobile adjustments */
-  .file-explorer__statusbar {
-    padding: 6px 12px;
-    font-size: 12px;
-  }
+/* Status bar - Mobile adjustments */
+.file-explorer--mobile .file-explorer__statusbar {
+  padding: 6px 12px;
+  font-size: 12px;
+}
 
-  /* Disable drag cursor on mobile */
-  .file-explorer__item[draggable='true'] {
-    cursor: default;
-  }
+/* Disable drag cursor on mobile */
+.file-explorer--mobile .file-explorer__item[draggable='true'] {
+  cursor: default;
+}
 
-  .file-explorer__item[draggable='true']:active {
-    cursor: default;
-  }
+.file-explorer--mobile .file-explorer__item[draggable='true']:active {
+  cursor: default;
 }
