@@ -1,0 +1,46 @@
+# robots.txt - Yamaç Bezirgan Portfolio
+# This file controls how search engines and bots crawl the site
+
+# Allow all bots to access the entire site
+User-agent: *
+Allow: /
+
+# Optional: Disallow legacy site from being indexed separately
+# (since it's embedded in the main portfolio)
+Disallow: /legacy/
+
+# Sitemap location (update this when you generate a sitemap)
+# Sitemap: https://www.yamacbezirgan.com/sitemap.xml
+
+# Crawl-delay: Be polite to the server
+Crawl-delay: 1
+
+# Common bots explicitly allowed (for clarity)
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: YandexBot
+Allow: /
+
+User-agent: facebot
+Allow: /
+
+User-agent: ia_archiver
+Allow: /
+
+# Note: This portfolio is built with React + Vite
+# and uses client-side rendering. Make sure your Cloudflare Pages
+# deployment is configured for proper meta tags and Open Graph support
+# for social media crawlers.

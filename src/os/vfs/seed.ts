@@ -365,27 +365,50 @@ export async function seedDefaultDesktop(): Promise<void> {
     starred: false,
   };
 
-  // About Me markdown file
+  // About Me markdown file (English)
   const aboutMeContent = `# Yamaç Bezirgan
 
-## Full Stack Developer
+## Full-Stack Developer | AI/ML Enthusiast
 
-Welcome to my interactive portfolio! I'm a passionate developer who loves creating engaging web experiences.
+Hey there! I'm Yamaç, a Computer Engineering graduate from Altınbaş University with a passion for building end-to-end, user-centric products. Currently working as an ML & AI Automation Intern at Arketic AI, I bring together technical rigor and creative thinking to deliver innovative software solutions.
 
-### Skills
-- React & TypeScript
-- Node.js & Express
-- Database Design
-- System Architecture
+### Background
+- 🎓 **Education:** Computer Engineering @ Altınbaş University (2020-2025)
+- 🌍 **International Experience:** Erasmus+ @ Università degli Studi di Milano (2022-2023)
+- 💼 **Current Role:** ML & AI Automation Intern @ Arketic AI (June 2025 - Present)
+- 🚀 **Freelance:** Building dynamic web applications since September 2020
+
+### What I Do
+I specialize in full-stack development with a growing focus on AI integration. My work spans from crafting responsive React frontends to architecting scalable backend systems, all while exploring the exciting world of machine learning and automation.
+
+**Key Skills:**
+- **Frontend:** React, TypeScript, Next.js, Responsive Design
+- **Backend:** Node.js, Express, REST APIs, Database Design
+- **AI/ML:** LLM Systems, Workflow Orchestration, Model Training
+- **Tools:** Docker, Git, MongoDB, PostgreSQL, CI/CD
 
 ### About This Portfolio
-This entire portfolio is built as a desktop OS simulation, showcasing advanced frontend development techniques including:
-- Virtual File System (IndexedDB)
-- State Management (Zustand)
-- Window Management System
-- Performance Optimization
+This entire portfolio is a desktop OS simulation running in your browser! It's not just a showcase—it's a technical demonstration of advanced frontend architecture:
 
-Feel free to explore and interact with the various applications!`;
+- **Virtual File System** - Full CRUD operations with IndexedDB persistence
+- **Window Management** - Draggable, resizable windows with state management
+- **Mobile-First Design** - Responsive desktop experience + native mobile shell
+- **PWA Support** - Installable, works offline
+- **Built-in Apps** - PDF viewer, file explorer, games, and more
+
+Every feature you see here is built from scratch using React, TypeScript, and modern web APIs. Feel free to explore, open apps, drag windows around, and experience what a desktop OS feels like in a browser!
+
+### Let's Connect
+I'm always excited to collaborate on impactful projects and contribute to dynamic teams. Whether it's building scalable web applications, exploring AI/ML solutions, or tackling creative technical challenges, I'm ready to jump in.
+
+📧 [contact@yamacbezirgan.com](mailto:contact@yamacbezirgan.com)
+🌐 [yamacbezirgan.com](https://www.yamacbezirgan.com)
+💼 [LinkedIn](https://linkedin.com/in/yamacbezirgan)
+🐙 [GitHub](https://github.com/ymcbzrgn)
+
+---
+
+*"Building software is like composing music—it takes technical skill, creativity, and a lot of iteration to get it just right."*`;
 
   const aboutMeFile: VFSNode = {
     id: 'about-me-md',
@@ -399,6 +422,68 @@ Feel free to explore and interact with the various applications!`;
     size: aboutMeContent.length,
     mimeType: 'text/markdown',
     targetUrl: `data:text/markdown;base64,${btoa(unescape(encodeURIComponent(aboutMeContent)))}`,
+    readonly: false,
+    hidden: false,
+    starred: false,
+  };
+
+  // About Me markdown file (Turkish)
+  const aboutMeContentTR = `# Yamaç Bezirgan
+
+## Full-Stack Developer | AI/ML Meraklısı
+
+Merhaba! Ben Yamaç, Altınbaş Üniversitesi Bilgisayar Mühendisliği mezunuyum ve uçtan uca, kullanıcı odaklı ürünler geliştirme konusunda tutkuluyum. Şu anda Arketic AI'da ML & AI Otomasyon Stajyeri olarak çalışıyorum ve teknik titizlikle yaratıcı düşünceyi birleştirerek yenilikçi yazılım çözümleri sunuyorum.
+
+### Arka Plan
+- 🎓 **Eğitim:** Bilgisayar Mühendisliği @ Altınbaş Üniversitesi (2020-2025)
+- 🌍 **Uluslararası Deneyim:** Erasmus+ @ Università degli Studi di Milano (2022-2023)
+- 💼 **Güncel Rol:** ML & AI Otomasyon Stajyeri @ Arketic AI (Haziran 2025 - Devam Ediyor)
+- 🚀 **Freelance:** Eylül 2020'den beri dinamik web uygulamaları geliştiriyorum
+
+### Ne Yapıyorum
+Yapay zeka entegrasyonuna artan bir odakla full-stack geliştirme konusunda uzmanlaşıyorum. Çalışmalarım responsive React frontend'lerden ölçeklenebilir backend sistemlerine kadar uzanıyor ve bu süreçte makine öğrenmesi ve otomasyonun heyecan verici dünyasını keşfediyorum.
+
+**Ana Yetenekler:**
+- **Frontend:** React, TypeScript, Next.js, Responsive Tasarım
+- **Backend:** Node.js, Express, REST API'ler, Veritabanı Tasarımı
+- **AI/ML:** LLM Sistemleri, İş Akışı Düzenleme, Model Eğitimi
+- **Araçlar:** Docker, Git, MongoDB, PostgreSQL, CI/CD
+
+### Bu Portfolyo Hakkında
+Bu portfolyo tamamen tarayıcınızda çalışan bir masaüstü işletim sistemi simülasyonu! Sadece bir vitrin değil—gelişmiş frontend mimarisinin teknik bir gösterimi:
+
+- **Sanal Dosya Sistemi** - IndexedDB kalıcılığı ile tam CRUD operasyonları
+- **Pencere Yönetimi** - State yönetimi ile sürüklenebilir, boyutlandırılabilir pencereler
+- **Mobil Öncelikli Tasarım** - Responsive masaüstü deneyimi + native mobil kabuk
+- **PWA Desteği** - Kurulabilir, çevrimdışı çalışır
+- **Yerleşik Uygulamalar** - PDF görüntüleyici, dosya yöneticisi, oyunlar ve daha fazlası
+
+Burada gördüğünüz her özellik React, TypeScript ve modern web API'leri kullanılarak sıfırdan inşa edildi. Keşfetmekte, uygulamaları açmakta, pencereleri sürüklemekte özgürsünüz ve bir masaüstü işletim sisteminin tarayıcıda nasıl hissettirdiğini deneyimleyin!
+
+### Bağlantıda Kalalım
+Etkili projelerde işbirliği yapmaktan ve dinamik ekiplere katkıda bulunmaktan her zaman heyecan duyarım. İster ölçeklenebilir web uygulamaları geliştirmek, ister AI/ML çözümleri keşfetmek ya da yaratıcı teknik zorlukları çözmek olsun, atlamaya hazırım.
+
+📧 [contact@yamacbezirgan.com](mailto:contact@yamacbezirgan.com)
+🌐 [yamacbezirgan.com](https://www.yamacbezirgan.com)
+💼 [LinkedIn](https://linkedin.com/in/yamacbezirgan)
+🐙 [GitHub](https://github.com/ymcbzrgn)
+
+---
+
+*"Yazılım geliştirmek müzik bestelemeye benzer—doğru sonucu elde etmek için teknik beceri, yaratıcılık ve bir sürü iterasyon gerekir."*`;
+
+  const aboutMeFileTR: VFSNode = {
+    id: 'about-me-tr-md',
+    type: 'file',
+    name: 'Hakkimda.md',
+    parentId: 'documents',
+    createdAt: now,
+    modifiedAt: now,
+    icon: 'file-markdown',
+    color: '#607D8B',
+    size: aboutMeContentTR.length,
+    mimeType: 'text/markdown',
+    targetUrl: `data:text/markdown;base64,${btoa(unescape(encodeURIComponent(aboutMeContentTR)))}`,
     readonly: false,
     hidden: false,
     starred: false,
@@ -511,6 +596,7 @@ Feel free to explore and interact with everything.
     picturesFolder,
     // Sample files
     aboutMeFile,
+    aboutMeFileTR,
     readmeFile,
     profileImage,
     oldWebsite,
