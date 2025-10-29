@@ -4,19 +4,43 @@
  */
 
 import { createNode } from './crud';
-import { isDBEmpty } from './db';
+import { isDBEmpty, deleteDB } from './db';
 import type { VFSNode } from '../types';
 
 /**
+ * VFS Schema Version
+ * Increment this when changing seed structure to trigger re-seed
+ */
+const VFS_VERSION = 2;
+
+/**
  * Seed default desktop structure
- * Idempotent: Only runs if database is empty
+ * Idempotent: Only runs if database is empty or version mismatch
  */
 export async function seedDefaultDesktop(): Promise<void> {
+  // Check stored version
+  const storedVersion = localStorage.getItem('vfs-version');
+  const currentVersion = String(VFS_VERSION);
+
+  // Version mismatch: clear DB and re-seed
+  if (storedVersion !== null && storedVersion !== currentVersion) {
+    console.log(
+      `[VFS Seed] Version mismatch (stored: ${storedVersion}, current: ${currentVersion}). Clearing database...`
+    );
+    await deleteDB();
+    localStorage.setItem('vfs-version', currentVersion);
+    // DB is now empty, continue to seed
+  }
+
   // Check if DB is already seeded
   const isEmpty = await isDBEmpty();
 
   if (!isEmpty) {
     console.log('[VFS Seed] Database already seeded, skipping...');
+    // Store version if not already set
+    if (!storedVersion) {
+      localStorage.setItem('vfs-version', currentVersion);
+    }
     return;
   }
 
@@ -549,6 +573,114 @@ Feel free to explore and interact with everything.
     starred: false,
   };
 
+  // OG Image (social media preview)
+  const ogImage: VFSNode = {
+    id: 'og-image-jpg',
+    type: 'file',
+    name: 'og-image.jpg',
+    parentId: 'pictures',
+    createdAt: now,
+    modifiedAt: now,
+    icon: 'file-image',
+    color: '#FF9800',
+    size: 0,
+    mimeType: 'image/jpeg',
+    targetUrl: '/og-image.jpg',
+    readonly: true,
+    hidden: false,
+    starred: false,
+  };
+
+  // Legacy site logo
+  const logoImage: VFSNode = {
+    id: 'logo-png',
+    type: 'file',
+    name: 'LOGO.png',
+    parentId: 'pictures',
+    createdAt: now,
+    modifiedAt: now,
+    icon: 'file-image',
+    color: '#FF9800',
+    size: 0,
+    mimeType: 'image/png',
+    targetUrl: '/legacy/LOGO.png',
+    readonly: true,
+    hidden: false,
+    starred: false,
+  };
+
+  // Legacy profile photo
+  const meImage: VFSNode = {
+    id: 'me-png',
+    type: 'file',
+    name: 'ME.png',
+    parentId: 'pictures',
+    createdAt: now,
+    modifiedAt: now,
+    icon: 'file-image',
+    color: '#FF9800',
+    size: 0,
+    mimeType: 'image/png',
+    targetUrl: '/legacy/ME.png',
+    readonly: true,
+    hidden: false,
+    starred: false,
+  };
+
+  // Apple Touch Icon
+  const appleTouchIcon: VFSNode = {
+    id: 'apple-touch-icon-png',
+    type: 'file',
+    name: 'apple-touch-icon.png',
+    parentId: 'pictures',
+    createdAt: now,
+    modifiedAt: now,
+    icon: 'file-image',
+    color: '#FF9800',
+    size: 0,
+    mimeType: 'image/png',
+    targetUrl: '/apple-touch-icon.png',
+    readonly: true,
+    hidden: false,
+    starred: false,
+  };
+
+  // PWA Icon 192
+  const icon192: VFSNode = {
+    id: 'icon-192-png',
+    type: 'file',
+    name: 'icon-192.png',
+    parentId: 'pictures',
+    createdAt: now,
+    modifiedAt: now,
+    icon: 'file-image',
+    color: '#FF9800',
+    size: 0,
+    mimeType: 'image/png',
+    targetUrl: '/icon-192.png',
+    readonly: true,
+    hidden: false,
+    starred: false,
+  };
+
+  // PWA Icon 512
+  const icon512: VFSNode = {
+    id: 'icon-512-png',
+    type: 'file',
+    name: 'icon-512.png',
+    parentId: 'pictures',
+    createdAt: now,
+    modifiedAt: now,
+    icon: 'file-image',
+    color: '#FF9800',
+    size: 0,
+    mimeType: 'image/png',
+    targetUrl: '/icon-512.png',
+    readonly: true,
+    hidden: false,
+    starred: false,
+  };
+
   // Old Website (legacy site in trash - easter egg!)
   const oldWebsite: VFSNode = {
     id: 'old-website',
@@ -598,7 +730,14 @@ Feel free to explore and interact with everything.
     aboutMeFile,
     aboutMeFileTR,
     readmeFile,
+    // Pictures folder images
     profileImage,
+    ogImage,
+    logoImage,
+    meImage,
+    appleTouchIcon,
+    icon192,
+    icon512,
     oldWebsite,
   ];
 
@@ -607,7 +746,10 @@ Feel free to explore and interact with everything.
     await createNode(node, true);
   }
 
-  console.log(`[VFS Seed] ✅ Seeding complete (${nodes.length} nodes processed)`);
+  // Store VFS version after successful seed
+  localStorage.setItem('vfs-version', currentVersion);
+
+  console.log(`[VFS Seed] ✅ Seeding complete (${nodes.length} nodes processed, version ${currentVersion})`);
 }
 
 /**
