@@ -516,16 +516,12 @@ Feel free to explore and interact with everything.
     oldWebsite,
   ];
 
-  try {
-    for (const node of nodes) {
-      await createNode(node);
-    }
-
-    console.log(`[VFS Seed] ✅ Created ${nodes.length} default nodes`);
-  } catch (error) {
-    console.error('[VFS Seed] ❌ Failed to seed database:', error);
-    throw error;
+  // Use silentIfExists=true to skip duplicates without errors
+  for (const node of nodes) {
+    await createNode(node, true);
   }
+
+  console.log(`[VFS Seed] ✅ Seeding complete (${nodes.length} nodes processed)`);
 }
 
 /**

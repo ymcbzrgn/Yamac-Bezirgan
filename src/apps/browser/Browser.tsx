@@ -12,9 +12,31 @@ interface BrowserProps extends AppProps {
 }
 
 export default function Browser({ windowId, url }: BrowserProps) {
+  console.log('[Browser] 🚀 MOUNTING', {
+    windowId,
+    url,
+    urlProvided: !!url,
+    timestamp: new Date().toISOString(),
+  });
+
   const [currentUrl, setCurrentUrl] = useState(url || 'about:blank');
   const [loading, setLoading] = useState(false);
   const [embedError, setEmbedError] = useState(false);
+
+  useEffect(() => {
+    console.log('[Browser] ✅ MOUNTED', {
+      currentUrl,
+      url,
+      isSameOrigin: currentUrl.startsWith('/') || currentUrl === 'about:blank',
+      timestamp: new Date().toISOString(),
+    });
+    return () => {
+      console.log('[Browser] 💀 UNMOUNTED', {
+        windowId,
+        timestamp: new Date().toISOString(),
+      });
+    };
+  }, [windowId, currentUrl, url]);
 
   // Check if URL is same-origin (safe to embed)
   const isSameOrigin = currentUrl.startsWith('/') || currentUrl === 'about:blank';

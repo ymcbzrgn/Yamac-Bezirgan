@@ -29,6 +29,50 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **File**: `src/os/hooks/useDeviceType.ts` lines 55-63
 - **Result**: iPad users now get fullscreen mobile UI instead of desktop windows
 
+#### 🔄 **Multiple Device State Instances Bug**
+- **Discovery**: User logs showed 4+ `useDeviceType` INIT messages when opening single app
+- **Root Cause**: Each component calling `useDeviceType()` created independent state instance
+- **Impact**: Device type state not synchronized across components, causing render inconsistencies
+- **Fix Applied**:
+  - Created `DeviceContext` with single global state instance
+  - Modified `useDeviceType()` to delegate to context
+  - Wrapped app with `<DeviceProvider>` in main.tsx
+  - Files: `src/os/contexts/DeviceContext.tsx` (new), `src/main.tsx`, `src/os/hooks/useDeviceType.ts`
+- **Result**: Single device detection state shared across entire app
+- **Lesson Learned**: Hooks with internal state create new instances per component - use Context for shared state
+
+#### 🎭 **AnimatePresence Blocking App Render**
+- **Discovery**: Apps would start mounting then immediately unmount, leaving blank green screen
+- **Root Cause**: `AnimatePresence mode="wait"` blocked new component render until exit animation completed
+- **Impact**: Apps failed to open - stuck in animation limbo
+- **Fix Applied**:
+  - Removed `mode="wait"` from AnimatePresence in MobileOS.tsx line 279
+  - File: `src/ui/mobile/MobileOS.tsx`
+- **Result**: Apps now render immediately, animations work correctly
+- **Lesson Learned**: `mode="wait"` should only be used when you explicitly need sequential animations
+
+#### ✖️ **X Close Button Intermittent Failure**
+- **Discovery**: User reported "kapatma tuşu bazen buga giriyor" (close button sometimes buggy)
+- **Root Cause**: Framer Motion's drag gesture on parent container interfering with button clicks
+- **Fix Applied**:
+  - Added `onDragStart` handler to cancel drag when clicking header/button
+  - Added CSS: `pointer-events: auto`, `z-index: 100`, `touch-action: manipulation` to button
+  - Added comprehensive event logging (onPointerDown, onTouchStart, onClick)
+  - Files: `src/ui/mobile/MobileAppShell.tsx`, `src/ui/mobile/MobileAppShell.css`
+- **Result**: Button clicks now take priority over drag gestures
+- **Testing Status**: Pending user verification
+
+#### 🌐 **Browser App Crash - Missing URL Prop**
+- **Discovery**: "Old Website" app mounted then immediately unmounted
+- **Root Cause**: Browser component expects `url` prop, but MobileOS only passed props for PDF viewer
+- **Impact**: Browser app showed "about:blank" then crashed
+- **Fix Applied**:
+  - Added URL prop passing for browser apps: `{...(activeApp.appId === 'browser' ? { url: activeApp.node.targetUrl || '' } : {})}`
+  - Added debug logging to Browser component
+  - Files: `src/ui/mobile/MobileOS.tsx` lines 318-320, `src/apps/browser/Browser.tsx`
+- **Result**: Browser app now receives URL and displays content correctly
+- **Testing Status**: Pending user verification
+
 ### Removed (2025-10-29)
 - **False Information from ROADMAP_3.md**:
   - ❌ "Operator precedence bug in MobileOS.tsx:51" - Misdiagnosis

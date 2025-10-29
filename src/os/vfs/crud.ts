@@ -8,9 +8,9 @@ import type { VFSNode, VFSContent } from '../types';
 
 /**
  * Create a new VFS node
- * Idempotent: If node with same ID exists, throws error
+ * Idempotent: If node with same ID exists, throws error (unless silentIfExists=true)
  */
-export async function createNode(node: VFSNode): Promise<void> {
+export async function createNode(node: VFSNode, silentIfExists = false): Promise<void> {
   const db = await getDB();
 
   // Validation
@@ -21,6 +21,11 @@ export async function createNode(node: VFSNode): Promise<void> {
   // Check if node already exists (idempotency check)
   const existing = await db.get('nodes', node.id);
   if (existing) {
+    if (silentIfExists) {
+      // Silent mode: log as info and return without error
+      console.log(`[VFS CRUD] ℹ️ Node already exists, skipping: ${node.name} (${node.id})`);
+      return;
+    }
     throw new Error(`Node with id "${node.id}" already exists`);
   }
 
@@ -36,6 +41,16 @@ export async function createNode(node: VFSNode): Promise<void> {
     await tx.done;
     console.log(`[VFS CRUD] Created node: ${node.name} (${node.id})`);
   } catch (error) {
+    // Handle race condition: node created between check and transaction
+    if (error instanceof Error &&
+        (error.name === 'ConstraintError' ||
+         error.message?.includes('already exists'))) {
+      if (silentIfExists) {
+        console.log(`[VFS CRUD] ℹ️ Node already exists (race condition), skipping: ${node.name} (${node.id})`);
+        return; // Silent success
+      }
+    }
+    // Real errors: still log and throw
     console.error('[VFS CRUD] Failed to create node:', error);
     throw error;
   }

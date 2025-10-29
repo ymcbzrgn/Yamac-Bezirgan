@@ -8,7 +8,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { motion, useMotionValue, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useSwipeable } from 'react-swipeable';
 import StatusBar from './StatusBar';
 import './MobileAppShell.css';
@@ -48,12 +48,7 @@ export default function MobileAppShell({
     };
   }, [appTitle]);
 
-  // Motion values for swipe-to-close
-  const y = useMotionValue(0);
-  const opacity = useTransform(y, [0, 300], [1, 0]);
-  const scale = useTransform(y, [0, 300], [1, 0.9]);
-
-  // Swipe handlers
+  // Swipe handlers (no drag system, only swipeable)
   const handlers = useSwipeable({
     onSwipedDown: (eventData) => {
       // Close if swipe distance > 100px OR velocity > 0.5
@@ -65,36 +60,32 @@ export default function MobileAppShell({
   });
 
   const handleClose = () => {
+    console.log('[MobileAppShell] ✖️ X BUTTON CLICKED / handleClose CALLED', {
+      appTitle,
+      isClosing,
+      timestamp: new Date().toISOString(),
+    });
     setIsClosing(true);
     setTimeout(() => {
+      console.log('[MobileAppShell] ✖️ Calling onClose callback - INSTANT', {
+        appTitle,
+        timestamp: new Date().toISOString(),
+      });
       onClose();
-    }, 200); // Match animation duration
+    }, 0); // Instant close (Option A)
   };
 
   return (
     <motion.div
       className="mobile-app-shell"
-      style={{ y, opacity, scale }}
-      initial={{ y: '100%', opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      exit={{ y: '100%', opacity: 0 }}
-      transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-      drag="y"
-      dragConstraints={{ top: 0, bottom: 300 }}
-      dragElastic={0.2}
-      onDragEnd={(_, info) => {
-        // Close if dragged down > 150px or velocity > 500
-        if (info.offset.y > 150 || info.velocity.y > 500) {
-          handleClose();
-        } else {
-          // Snap back to top
-          y.set(0);
-        }
-      }}
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.2 }}
     >
       <StatusBar />
 
-      {/* Drag handle indicator */}
+      {/* Swipe handle indicator */}
       <div className="mobile-app-shell__handle" {...handlers}>
         <div className="mobile-app-shell__handle-bar" />
       </div>
@@ -105,7 +96,15 @@ export default function MobileAppShell({
           <h1 className="mobile-app-shell__title">{appTitle}</h1>
           <button
             className="mobile-app-shell__close-btn"
-            onClick={handleClose}
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              console.log('[MobileAppShell] ✖️ X BUTTON CLICKED', {
+                appTitle,
+                timestamp: new Date().toISOString(),
+              });
+              handleClose();
+            }}
             aria-label="Close"
           >
             ✕

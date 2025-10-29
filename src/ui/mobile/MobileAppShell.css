@@ -76,6 +76,7 @@
   justify-content: center;
   transition: background 0.2s;
   -webkit-tap-highlight-color: transparent;
+  touch-action: auto; /* Option B: Override parent drag behavior */
 }
 
 .mobile-app-shell__close-btn:active {

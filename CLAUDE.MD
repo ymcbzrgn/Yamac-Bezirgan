@@ -364,6 +364,97 @@ useEffect(() => {
 
 ---
 
+### Ders #007: AnimatePresence & Framer Motion Drag Gesture Conflicts
+**Tarih:** 2025-10-29
+**Senaryo:** Mobile app açılıyor ama hemen kapanıyor (blank green screen), X button bazen çalışmıyor
+**Sorun 1:** `AnimatePresence mode="wait"` yeni component render'ını blokluyordu
+**Sorun 2:** Parent'taki `drag="y"` gesture button click event'lerini intercept ediyordu
+
+#### Problem 1: AnimatePresence Blocking Render
+**Kod (YANLIŞ):**
+```typescript
+<AnimatePresence mode="wait">
+  {currentView === 'launcher' && <MobileLauncher />}
+  {currentView === 'app' && <MobileAppShell>...</MobileAppShell>}
+</AnimatePresence>
+```
+
+**Neden Hatalı:**
+- `mode="wait"` → exit animation bitene kadar next component render'lanmaz
+- Eğer animation stuck olursa → infinite wait → blank screen
+- Logs: "MOUNTING... MOUNTED... UNMOUNTED" loop
+
+**Çözüm:**
+```typescript
+<AnimatePresence> {/* mode="wait" KALDIRILDI */}
+  {currentView === 'launcher' && <MobileLauncher key="launcher" />}
+  {currentView === 'app' && <MobileAppShell key="app">...</MobileAppShell>}
+</AnimatePresence>
+```
+
+**Ne Zaman `mode="wait"` Kullanılmalı:**
+- ✅ Slideshow gibi sıralı animasyonlar (bir fotoğraf tamamen çıksın, sonra diğeri girsin)
+- ✅ Page transitions (current page exit → new page enter)
+- ❌ Overlay/modal gibi independent components (launcher vs app birbirinden bağımsız)
+
+#### Problem 2: Framer Motion Drag Intercepting Clicks
+**Kod (YANLIŞ):**
+```typescript
+<motion.div drag="y" dragConstraints={{...}}>
+  <header>
+    <button onClick={handleClose}>✕</button> {/* ❌ Click sometimes fails */}
+  </header>
+</motion.div>
+```
+
+**Neden Hatalı:**
+- `drag="y"` → tüm pointer events capture edilir
+- Kullanıcı button'a tap → Framer Motion "bu drag mi yoksa click mi?" diye bekler
+- Eğer parmak hafif hareket ederse → drag olarak algılanır → onClick fire olmaz
+
+**Çözüm 1: onDragStart ile Drag Prevention**
+```typescript
+<motion.div
+  drag="y"
+  onDragStart={(event) => {
+    const target = event.target as HTMLElement;
+    if (target.closest('.close-button') || target.closest('.header')) {
+      return false; // ❌ Cancel drag
+    }
+  }}
+>
+  <header>
+    <button onClick={handleClose}>✕</button> {/* ✅ Now works */}
+  </header>
+</motion.div>
+```
+
+**Çözüm 2: CSS Pointer Events Priority**
+```css
+.close-button {
+  pointer-events: auto; /* Always receive events */
+  z-index: 100; /* Above parent */
+  touch-action: manipulation; /* No delay on tap */
+}
+```
+
+**Uygulama:**
+- ✅ FIXED: src/ui/mobile/MobileAppShell.tsx lines 94-108 (onDragStart)
+- ✅ FIXED: src/ui/mobile/MobileAppShell.css lines 80-83 (CSS priority)
+- ✅ Apps now open immediately (no blank screen)
+- ✅ X button click priority over drag
+
+**İleri Not:**
+- Framer Motion drag + clickable children → ALWAYS add onDragStart prevention
+- Test both: quick tap (should click) + slow drag (should drag)
+- Consider `dragListener={false}` on specific child elements (alternative approach)
+
+**Related Bugs:**
+- Hata #007 - AnimatePresence blocking (see below)
+- Hata #008 - X button drag conflict (see below)
+
+---
+
 ## 🐛 Hata Kütüphanesi ve Çözümler
 
 ### Hata #001: Vite Build - Dynamic Import Chunk Error

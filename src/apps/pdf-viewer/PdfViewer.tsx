@@ -21,6 +21,14 @@ const MAX_SCALE = 3.0;
 const SCALE_STEP = 0.25;
 
 export default function PdfViewer({ fileUrl, windowId }: PdfViewerProps) {
+  console.log('[PdfViewer] 🚀 MOUNTING', {
+    fileUrl,
+    windowId,
+    fileUrlProvided: !!fileUrl,
+    fileUrlLength: fileUrl?.length,
+    timestamp: new Date().toISOString(),
+  });
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [pdf, setPdf] = useState<any>(null);
@@ -30,6 +38,20 @@ export default function PdfViewer({ fileUrl, windowId }: PdfViewerProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [rendering, setRendering] = useState(false);
+
+  useEffect(() => {
+    console.log('[PdfViewer] ✅ MOUNTED', {
+      fileUrl,
+      windowId,
+      timestamp: new Date().toISOString(),
+    });
+    return () => {
+      console.log('[PdfViewer] 💀 UNMOUNTED', {
+        windowId,
+        timestamp: new Date().toISOString(),
+      });
+    };
+  }, [fileUrl, windowId]);
 
   // Load PDF document
   useEffect(() => {

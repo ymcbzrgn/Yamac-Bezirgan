@@ -304,13 +304,19 @@ export default function MobileOS() {
               onClose={handleAppShellClose}
               appTitle={activeApp.node.name}
             >
-              {console.log('[MobileOS] 🎯 AppLoader children rendering', { appId: activeApp.appId })}
+              {console.log('[MobileOS] 🎯 AppLoader children rendering', {
+                appId: activeApp.appId,
+                nodeTargetUrl: activeApp.node.targetUrl,
+              })}
               <AppLoader
                 appId={activeApp.appId}
                 windowId={activeApp.windowId}
                 nodeId={activeApp.node.id}
                 {...(activeApp.appId === 'pdf-viewer'
                   ? { fileUrl: activeApp.node.targetUrl || '' }
+                  : {})}
+                {...(activeApp.appId === 'browser'
+                  ? { url: activeApp.node.targetUrl || '' }
                   : {})}
               />
             </MobileAppShell>
