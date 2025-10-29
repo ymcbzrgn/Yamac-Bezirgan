@@ -68,6 +68,13 @@ export function useAppOpener() {
   const { openWindow } = useWindowActions();
 
   return (params: AppOpenParams) => {
+    console.log('[useAppOpener] 📞 CALLED', {
+      isMobile,
+      path: isMobile ? 'Mobile (custom event)' : 'Desktop (Zustand)',
+      params,
+      timestamp: new Date().toISOString(),
+    });
+
     if (isMobile) {
       // Mobile: Dispatch custom event for MobileOS to handle
       const detail: MobileOpenAppDetail = {
@@ -79,11 +86,19 @@ export function useAppOpener() {
         meta: params.meta,
       };
 
+      console.log('[useAppOpener] 📤 Dispatching mobile:openApp event', {
+        detail,
+        timestamp: new Date().toISOString(),
+      });
+
       window.dispatchEvent(
         new CustomEvent('mobile:openApp', { detail })
       );
+
+      console.log('[useAppOpener] ✅ Event dispatched successfully');
     } else {
       // Desktop: Use normal window manager
+      console.log('[useAppOpener] 🖥️ Opening desktop window via Zustand');
       openWindow({
         id: params.id,
         appId: params.appId,

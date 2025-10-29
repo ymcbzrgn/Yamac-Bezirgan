@@ -3,7 +3,7 @@
  * Ubuntu×XP Desktop Portfolio
  */
 
-import { lazy, Suspense, ComponentType } from 'react';
+import { lazy, Suspense, ComponentType, useEffect } from 'react';
 import type { AppRegistry } from './types';
 
 /**
@@ -38,6 +38,13 @@ const appRegistry: AppRegistry = {
  * Loading skeleton with animated bones
  */
 function AppSkeleton() {
+  // DEBUG: Log skeleton render
+  useEffect(() => {
+    console.log('[AppLoader] ⏳ Showing skeleton (Suspense fallback)', {
+      timestamp: new Date().toISOString(),
+    });
+  }, []);
+
   return (
     <div className="app-skeleton">
       <div className="app-skeleton__header" />
@@ -170,18 +177,65 @@ interface AppLoaderProps {
  * Lazy loads apps and shows skeleton while loading
  */
 export default function AppLoader({ appId, ...props }: AppLoaderProps) {
+  // DEBUG: Log AppLoader invocation
+  console.log('[AppLoader] 🎬 RENDER START', {
+    appId,
+    props,
+    timestamp: new Date().toISOString(),
+  });
+
+  useEffect(() => {
+    console.log('[AppLoader] 🚀 MOUNTING (useEffect)', {
+      appId,
+      propsKeys: Object.keys(props),
+      timestamp: new Date().toISOString(),
+    });
+    return () => {
+      console.log('[AppLoader] 💀 UNMOUNTED (useEffect cleanup)', {
+        appId,
+        timestamp: new Date().toISOString(),
+      });
+    };
+  }, [appId, props]);
+
   const appImport = appRegistry[appId];
+
+  console.log('[AppLoader] 🔍 Registry lookup', {
+    appId,
+    found: !!appImport,
+    registryKeys: Object.keys(appRegistry),
+    timestamp: new Date().toISOString(),
+  });
 
   // App not found in registry
   if (!appImport) {
+    console.error('[AppLoader] ❌❌❌ App not found in registry!', {
+      appId,
+      availableApps: Object.keys(appRegistry),
+      timestamp: new Date().toISOString(),
+    });
     return <AppError appId={appId} />;
   }
+
+  console.log('[AppLoader] ✅ App found in registry, creating lazy component...', {
+    appId,
+    timestamp: new Date().toISOString(),
+  });
 
   // Lazy load the app component
   const AppComponent = lazy(appImport);
 
+  console.log('[AppLoader] 🎁 Wrapping in Suspense', {
+    appId,
+    timestamp: new Date().toISOString(),
+  });
+
   return (
-    <Suspense fallback={<AppSkeleton />}>
+    <Suspense fallback={(() => {
+      console.log('[AppLoader] ⏳ Suspense fallback rendering');
+      return <AppSkeleton />;
+    })()}>
+      {console.log('[AppLoader] 🎯 Rendering lazy component', { appId })}
       <AppComponent {...props} />
     </Suspense>
   );

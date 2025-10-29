@@ -296,6 +296,74 @@ function tryIframe(url: string) {
 
 ---
 
+### Ders #006: CSS `touch-action` Considered Harmful
+**Tarih:** 2025-10-29
+**Senaryo:** Mobile UX tamamen çalışmıyor, hiçbir app açılmıyor
+**Sorun:** Root container'a `touch-action: none` uygulandı, TÜM touch event'leri bloklandı
+**Çözüm:**
+- ❌ **Yanlış:** `touch-action: none` (root level)
+- ✅ **Doğru:** `touch-action: pan-y` (selective)
+
+**Kod:**
+```css
+/* Anti-pattern - ASLA YAPMA */
+.mobile-os {
+  touch-action: none; /* ❌ Kills ALL touch events */
+}
+
+/* Best Practice */
+.mobile-os {
+  touch-action: pan-y; /* ✅ Allows tap + vertical scroll, blocks zoom/horizontal pan */
+}
+
+/* OR: Selective blocking (ideal) */
+.mobile-os {
+  touch-action: manipulation; /* Default: allows taps + pan + pinch */
+}
+
+.mobile-os__drag-handle {
+  touch-action: none; /* ONLY on draggable elements */
+}
+```
+
+**Neden Bu Kadar Kritik:**
+1. CSS `touch-action: none` → Browser cancel eder touch events
+2. TouchEnd never fires → Click event never fires
+3. onClick handler never called → Nothing works
+4. **Silent Failure:** JavaScript'te hata yok, DevTools'ta error yok
+5. **Misdiagnosis Risk:** "JS logic bug" sanılır, gerçek sebep CSS
+
+**Uygulama:**
+- ✅ FIXED: src/ui/mobile/MobileOS.css line 11
+- ✅ Mobile taps now work
+- ✅ Scroll works
+- ✅ Zoom blocked (desired behavior)
+
+**İleri Not:**
+- Mobile-first development için test protokolü:
+  - [ ] Chrome DevTools mobile emulator (immediate check)
+  - [ ] Real device test (iOS Safari, Android Chrome)
+  - [ ] Touch event console.log() ekle (debugging)
+  - [ ] Never use `touch-action: none` on root containers
+
+**Testing Protocol:**
+```javascript
+// Add to MobileOS.tsx for debugging
+useEffect(() => {
+  const log = (e: TouchEvent) => console.log('[Touch Event]', e.type, e.touches);
+  window.addEventListener('touchstart', log);
+  window.addEventListener('touchend', log);
+  return () => {
+    window.removeEventListener('touchstart', log);
+    window.removeEventListener('touchend', log);
+  };
+}, []);
+```
+
+**Related Bug:** Hata #006 - touch-action catastrophe (see below)
+
+---
+
 ## 🐛 Hata Kütüphanesi ve Çözümler
 
 ### Hata #001: Vite Build - Dynamic Import Chunk Error
@@ -831,17 +899,28 @@ Tüm VFS CRUD'larda kullan
 ## ✨ Sonraki Oturum İçin Hazırlık
 
 **Şu An Kaldığım Yer:**
-- **Epic:** Henüz başlanmadı
-- **Task:** Henüz başlanmadı
-- **Dosya:** -
-- **Satır:** -
+- **Epic:** Dual OS Architecture Hardening
+- **Task:** CSS/JS Device Detection Mismatch Fix - ✅ Completed
+- **Dosya:** FileExplorer.tsx, Desktop.tsx, MobileOS.tsx, useAppOpener.ts
+- **Satır:** Documentation ve testing phase
 
-**Yapılacak:**
-1. MVP Epik-1, Task #1'den başla (Legacy archive)
-2. `git checkout -b chore/archive-legacy-site`
-3. `old/` klasörü oluştur, mevcut kodu taşı
+**Son Yapılanlar (2025-10-29):**
+1. ✅ FileExplorer.css: Media query → `.file-explorer--mobile` modifier class
+2. ✅ FileExplorer.tsx: Conditional className (`isMobile` bazlı)
+3. ✅ Component classification comments (DESKTOP-ONLY, MOBILE-ONLY, SHARED)
+4. ✅ useAppOpener.ts: Comprehensive JSDoc (event bus architecture explained)
+5. ✅ 19 CSS file audit (media query inventory)
+
+**Yapılacak (Manuel Test):**
+1. Desktop smoke test (1024px): FileExplorer aç, grid doğru mu, double-click çalışıyor mu
+2. Mobile smoke test (375px): FileExplorer aç, 3-column grid var mı, tap çalışıyor mu
+3. Resize boundary test: 768px'te desktop → mobile geçiş smooth mu
+4. Lighthouse mobile score check
+5. Git commit + push
 
 **Blocker:** Yok
+
+**Dev Server:** http://localhost:5173/ (Running, HMR active)
 
 ---
 
@@ -850,6 +929,6 @@ Bu dosya senin hafızan. Her yeni şey öğrendiğinde buraya ekle. Her hata yap
 
 ---
 
-**Son Güncelleme:** 2025-10-20 (Proje başlangıcı)  
-**Güncelleyen:** Claude (Session #1)  
-**Değişiklik:** İlk dosya oluşturma
+**Son Güncelleme:** 2025-10-29 (Dual OS Architecture Hardening)
+**Güncelleyen:** Claude (Session #2)
+**Değişiklik:** CSS/JS device detection mismatch fix, component classification, JSDoc documentation

@@ -7,7 +7,7 @@
  * - Blur backdrop when closing
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, useMotionValue, useTransform } from 'framer-motion';
 import { useSwipeable } from 'react-swipeable';
 import StatusBar from './StatusBar';
@@ -25,6 +25,28 @@ export default function MobileAppShell({
   appTitle,
 }: MobileAppShellProps) {
   const [isClosing, setIsClosing] = useState(false);
+
+  // DEBUG: Log MobileAppShell lifecycle
+  useState(() => {
+    console.log('[MobileAppShell] 🚀 MOUNTING', {
+      appTitle,
+      hasChildren: !!children,
+      timestamp: new Date().toISOString(),
+    });
+  });
+
+  useEffect(() => {
+    console.log('[MobileAppShell] ✅ MOUNTED', {
+      appTitle,
+      timestamp: new Date().toISOString(),
+    });
+    return () => {
+      console.log('[MobileAppShell] 💀 UNMOUNTED', {
+        appTitle,
+        timestamp: new Date().toISOString(),
+      });
+    };
+  }, [appTitle]);
 
   // Motion values for swipe-to-close
   const y = useMotionValue(0);

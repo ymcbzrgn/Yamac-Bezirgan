@@ -20,7 +20,7 @@
  * Implementation: Uses isMobile hook for conditional event handlers and className.
  */
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useVFSNodes, useVFSNodesByParent, useVFSActions } from '../../os/store';
 import { getIconDisplay } from '../../os/utils/iconMap';
@@ -51,6 +51,32 @@ export default function FileExplorer({ windowId, nodeId }: FileExplorerProps) {
   const openApp = useAppOpener();
   const { createNode, updateNode, deleteNode, moveNode } = useVFSActions();
   const isMobile = useIsMobile();
+
+  // DEBUG: Log FileExplorer mount and mobile detection
+  useEffect(() => {
+    console.log('[FileExplorer] 🚀 MOUNTED', {
+      windowId,
+      nodeId,
+      isMobile,
+      windowInnerWidth: window.innerWidth,
+      timestamp: new Date().toISOString(),
+    });
+    return () => {
+      console.log('[FileExplorer] 💀 UNMOUNTED', {
+        windowId,
+        timestamp: new Date().toISOString(),
+      });
+    };
+  }, [windowId, nodeId, isMobile]);
+
+  // DEBUG: Log when isMobile changes
+  useEffect(() => {
+    console.log('[FileExplorer] 📱 isMobile CHANGED', {
+      isMobile,
+      willApplyClassName: isMobile ? 'file-explorer file-explorer--mobile' : 'file-explorer',
+      timestamp: new Date().toISOString(),
+    });
+  }, [isMobile]);
 
   // Navigation state: array of folder IDs representing the path
   const [path, setPath] = useState<string[]>([nodeId || 'root']);

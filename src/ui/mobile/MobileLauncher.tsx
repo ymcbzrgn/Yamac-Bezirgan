@@ -68,7 +68,14 @@ export default function MobileLauncher({ onAppOpen }: MobileLauncherProps) {
   }, [filteredNodes, dockApps]);
 
   const handleAppClick = (node: VFSNode) => {
+    console.log('[MobileLauncher] 🖱️ App clicked', {
+      nodeName: node.name,
+      nodeId: node.id,
+      nodeType: node.type,
+      timestamp: new Date().toISOString(),
+    });
     onAppOpen(node);
+    console.log('[MobileLauncher] ✅ onAppOpen callback called');
   };
 
   return (
