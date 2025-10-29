@@ -527,10 +527,10 @@ export default function FileExplorer({ windowId, nodeId }: FileExplorerProps) {
       onClick: () => !isRenaming && onOpen(node), // Single tap opens on mobile
     } : {};
 
-    const desktopHandlers = !isMobile ? {
+    const desktopHandlers = {
       onDoubleClick: () => !isRenaming && onOpen(node),
       onContextMenu: (e: React.MouseEvent) => !isRenaming && onContextMenu(e, node),
-    } : {};
+    };
 
     return (
       <div
