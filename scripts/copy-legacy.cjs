@@ -71,6 +71,16 @@ async function copyLegacySite() {
       process.exit(1);
     }
 
+    // Verify CV PDF exists (critical for production)
+    const pdfPath = path.join(target, 'YAMAC_BEZIRGAN_CV.pdf');
+    if (!fs.existsSync(pdfPath)) {
+      console.error('❌ Error: CV PDF not found after copy');
+      console.error('   Expected:', pdfPath);
+      console.error('   Make sure YAMAC_BEZIRGAN_CV.pdf exists in old/dist-legacy/');
+      process.exit(1);
+    }
+    console.log('  ✓ CV PDF found');
+
     // Calculate and log size
     const getDirectorySize = (dirPath) => {
       let size = 0;

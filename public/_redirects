@@ -1,0 +1,31 @@
+# Cloudflare Pages - Static File Routing Configuration
+# Serve static files directly without SPA fallback
+
+# Legacy site assets (highest priority)
+/legacy/*  200
+
+# Static assets
+/assets/*  200
+/icons/*   200
+
+# File extensions - serve directly
+/*.pdf     200
+/*.png     200
+/*.jpg     200
+/*.jpeg    200
+/*.gif     200
+/*.webp    200
+/*.svg     200
+/*.ico     200
+/*.json    200
+/*.txt     200
+/*.xml     200
+/*.webmanifest  200
+/*.woff    200
+/*.woff2   200
+/*.ttf     200
+/*.eot     200
+/*.otf     200
+
+# SPA fallback for all other routes
+/*  /index.html  200
