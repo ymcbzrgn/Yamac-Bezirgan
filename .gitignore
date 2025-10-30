@@ -39,3 +39,10 @@ coverage/
 
 # Misc
 *.pem
+
+# Internal Documentation (not for public repo)
+CLAUDE.MD
+CLAUDE.md
+PRD+TDD.md
+ROADMAP*.md
+CHANGELOG.md

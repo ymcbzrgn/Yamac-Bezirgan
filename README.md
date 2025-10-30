@@ -100,7 +100,6 @@ npm run preview
 │   ├── legacy/               # Previous portfolio version
 │   ├── _headers              # Cloudflare security headers
 │   └── manifest.webmanifest  # PWA configuration
-└── CLAUDE.md                 # AI-assisted development log
 ```
 
 ## ✨ Key Features
