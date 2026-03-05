@@ -151,6 +151,23 @@
   flex-shrink: 0;
 }
 
+.taskbar__privacy {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  opacity: 0.35;
+  transition: opacity var(--transition-base);
+  padding: 4px;
+}
+
+.taskbar__privacy:hover {
+  opacity: 0.8;
+}
+
 .taskbar__time {
   font-family: var(--font-family-mono);
   font-size: 14px;

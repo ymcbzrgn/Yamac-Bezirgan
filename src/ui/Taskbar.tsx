@@ -78,6 +78,16 @@ export default function Taskbar() {
 
       {/* System Tray / Clock */}
       <div className="taskbar__tray">
+        <button
+          className="taskbar__privacy"
+          onClick={() => window.open('/privacy.html', '_blank')}
+          title="Privacy Policy"
+          aria-label="Privacy Policy"
+        >
+          <svg width="14" height="16" viewBox="0 0 14 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7 0L0 3v4.5c0 4.14 2.99 8.01 7 8.5 4.01-.49 7-4.36 7-8.5V3L7 0z" fill="currentColor"/>
+          </svg>
+        </button>
         <div className="taskbar__time">
           {currentTime.toLocaleTimeString('tr-TR', {
             hour: '2-digit',

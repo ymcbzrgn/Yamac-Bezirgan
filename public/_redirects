@@ -27,5 +27,8 @@
 /*.eot     200
 /*.otf     200
 
+# Static pages
+/privacy  /privacy.html  200
+
 # SPA fallback for all other routes
 /*  /index.html  200

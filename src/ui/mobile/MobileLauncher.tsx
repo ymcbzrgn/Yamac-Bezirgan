@@ -146,6 +146,16 @@ export default function MobileLauncher({ onAppOpen }: MobileLauncherProps) {
           </motion.button>
         ))}
       </div>
+
+      {/* Privacy link */}
+      <a
+        href="/privacy.html"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mobile-launcher__privacy"
+      >
+        Privacy
+      </a>
     </motion.div>
   );
 }
