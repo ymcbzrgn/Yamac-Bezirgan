@@ -3,7 +3,7 @@
  * Default desktop structure initialization
  */
 
-import { createNode } from './crud';
+import { createNode, getNode, updateNode } from './crud';
 import { isDBEmpty, deleteDB } from './db';
 import type { VFSNode } from '../types';
 
@@ -18,6 +18,10 @@ const VFS_VERSION = 2;
  * Idempotent: Only runs if database is empty or version mismatch
  */
 export async function seedDefaultDesktop(): Promise<void> {
+  const now = Date.now();
+  const encodeMarkdownDataUrl = (content: string) =>
+    `data:text/markdown;base64,${btoa(unescape(encodeURIComponent(content)))}`;
+
   // Check stored version
   const storedVersion = localStorage.getItem('vfs-version');
   const currentVersion = String(VFS_VERSION);
@@ -36,6 +40,116 @@ export async function seedDefaultDesktop(): Promise<void> {
   const isEmpty = await isDBEmpty();
 
   if (!isEmpty) {
+    const existingCv = await getNode('cv-pdf');
+    if (existingCv?.targetUrl !== '/YAMAC_BEZIRGAN_CURRENT_CV.pdf') {
+      await updateNode('cv-pdf', {
+        targetUrl: '/YAMAC_BEZIRGAN_CURRENT_CV.pdf',
+        mimeType: 'application/pdf',
+      });
+    }
+
+    const existingOldCv = await getNode('old-cv-pdf');
+    if (existingOldCv) {
+      await updateNode('old-cv-pdf', {
+        mimeType: 'application/x-browser-pdf',
+        targetUrl: '/legacy/YAMAC_BEZIRGAN_CV.pdf',
+      });
+    }
+
+    await createNode(
+      {
+        id: 'old-cv-pdf',
+        type: 'file',
+        name: 'Old CV.pdf',
+        parentId: 'trash',
+        createdAt: now - 90 * 24 * 60 * 60 * 1000,
+        modifiedAt: now - 90 * 24 * 60 * 60 * 1000,
+        icon: 'file-pdf',
+        color: '#9E9E9E',
+        size: 0,
+        mimeType: 'application/x-browser-pdf',
+        targetUrl: '/legacy/YAMAC_BEZIRGAN_CV.pdf',
+        readonly: true,
+        hidden: false,
+        starred: false,
+      },
+      true
+    );
+
+    const aboutMeContent = `# Yamaç Bezirgan
+
+## Software Engineer
+
+I am a software engineer focused on AI platforms, backend architecture, and full-stack product development. I build production-ready systems across Python and TypeScript ecosystems, combining system design, automation, LLM workflows, and user-facing products.
+
+### Current Focus
+
+- Software Engineer at Arketic AI, contributing to enterprise AI products across backend services, LLM integrations, automation, and secure deployment workflows.
+- Interested in technical leadership, product thinking, and scalable systems that connect engineering execution with real business impact.
+
+### Areas of Work
+
+- **AI Platforms & Automation:** LLM integration, RAG, agent workflows, orchestration, and automation pipelines
+- **Full-Stack Engineering:** React, React Native, Node.js, Express, REST APIs, PostgreSQL, and Supabase
+- **Product & Architecture:** end-to-end ownership, system design, developer tooling, and performance-focused UX
+
+### About This Portfolio
+
+This portfolio is designed as a browser-based desktop environment rather than a conventional personal website. It includes a virtual file system, window management, built-in apps, PDF viewing, markdown rendering, terminal interactions, and adaptive mobile behavior. The goal is to make the portfolio itself a product and engineering artifact.
+
+### Working Style
+
+I enjoy building software that is technically solid, useful in practice, and clear in experience. I care about reliability, maintainability, thoughtful interfaces, and strong execution quality.
+
+### Contact
+
+- Email: [contact@yamacbezirgan.com](mailto:contact@yamacbezirgan.com)
+- Website: [yamacbezirgan.com](https://www.yamacbezirgan.com)
+- LinkedIn: [linkedin.com/in/yamacbezirgan](https://linkedin.com/in/yamacbezirgan)
+- GitHub: [github.com/ymcbzrgn](https://github.com/ymcbzrgn)`;
+
+    await updateNode('about-me-md', {
+      size: aboutMeContent.length,
+      targetUrl: encodeMarkdownDataUrl(aboutMeContent),
+    });
+
+    const aboutMeContentTR = `# Yamaç Bezirgan
+
+## Yazılım Mühendisi
+
+Yapay zeka platformları, backend mimarisi ve uçtan uca ürün geliştirme odağında çalışan bir yazılım mühendisiyim. Python ve TypeScript ekosistemlerinde üretim ortamına uygun sistemler geliştiriyor; LLM entegrasyonu, otomasyon, sistem tasarımı ve kullanıcıya dokunan deneyimleri bir araya getiriyorum.
+
+### Güncel Odağım
+
+- Arketic AI'da yazılım mühendisi olarak kurumsal AI ürünleri üzerinde backend servisleri, LLM akışları, otomasyon ve güvenli dağıtım süreçleri geliştiriyorum.
+- Uzun vadede mühendislik icrasını ürün ve iş etkisiyle buluşturan teknik liderlik rollerine ilerlemeyi hedefliyorum.
+
+### Çalışma Alanlarım
+
+- **AI Platformları ve Otomasyon:** LLM entegrasyonu, RAG, ajan tabanlı akışlar, orkestrasyon ve otomasyon süreçleri
+- **Full-Stack Geliştirme:** React, React Native, Node.js, Express, REST API'ler, PostgreSQL ve Supabase
+- **Ürün ve Mimari:** uçtan uca sahiplenme, sistem tasarımı, geliştirici araçları ve performans odaklı kullanıcı deneyimi
+
+### Bu Portfolyo Hakkında
+
+Bu portfolyo klasik bir kişisel web sitesi yerine tarayıcı içinde çalışan bir masaüstü ortamı olarak tasarlandı. Sanal dosya sistemi, pencere yönetimi, yerleşik uygulamalar, PDF görüntüleme, markdown okuma, terminal etkileşimleri ve mobil uyumlu bir kabuk içeriyor. Amacım portfolyoyu yalnızca bir vitrin değil, aynı zamanda bir ürün ve mühendislik çıktısı haline getirmek.
+
+### Çalışma Yaklaşımım
+
+Teknik olarak sağlam, gerçek kullanım değeri taşıyan ve deneyim açısından özenli yazılımlar üretmeyi seviyorum. Benim için güvenilirlik, bakım kolaylığı, iyi düşünülmüş arayüzler ve güçlü teslim kalitesi çok önemli.
+
+### İletişim
+
+- E-posta: [contact@yamacbezirgan.com](mailto:contact@yamacbezirgan.com)
+- Website: [yamacbezirgan.com](https://www.yamacbezirgan.com)
+- LinkedIn: [linkedin.com/in/yamacbezirgan](https://linkedin.com/in/yamacbezirgan)
+- GitHub: [github.com/ymcbzrgn](https://github.com/ymcbzrgn)`;
+
+    await updateNode('about-me-tr-md', {
+      size: aboutMeContentTR.length,
+      targetUrl: encodeMarkdownDataUrl(aboutMeContentTR),
+    });
+
     console.log('[VFS Seed] Database already seeded, skipping...');
     // Store version if not already set
     if (!storedVersion) {
@@ -45,9 +159,6 @@ export async function seedDefaultDesktop(): Promise<void> {
   }
 
   console.log('[VFS Seed] Creating default desktop structure...');
-
-  const now = Date.now();
-
   // Root node (Desktop)
   const rootNode: VFSNode = {
     id: 'root',
@@ -105,7 +216,7 @@ export async function seedDefaultDesktop(): Promise<void> {
     color: '#D32F2F',
     size: 0, // Unknown size (external file)
     mimeType: 'application/pdf',
-    targetUrl: '/legacy/YAMAC_BEZIRGAN_CV.pdf', // External link to legacy folder
+    targetUrl: '/YAMAC_BEZIRGAN_CURRENT_CV.pdf', // Current CV in public root
     readonly: true,
     hidden: false,
     starred: true,
@@ -392,47 +503,35 @@ export async function seedDefaultDesktop(): Promise<void> {
   // About Me markdown file (English)
   const aboutMeContent = `# Yamaç Bezirgan
 
-## Full-Stack Developer | AI/ML Enthusiast
+## Software Engineer
 
-Hey there! I'm Yamaç, a Computer Engineering graduate from Altınbaş University with a passion for building end-to-end, user-centric products. Currently working as an ML & AI Automation Intern at Arketic AI, I bring together technical rigor and creative thinking to deliver innovative software solutions.
+I am a software engineer focused on AI platforms, backend architecture, and full-stack product development. I build production-ready systems across Python and TypeScript ecosystems, combining system design, automation, LLM workflows, and user-facing products.
 
-### Background
-- 🎓 **Education:** Computer Engineering @ Altınbaş University (2020-2025)
-- 🌍 **International Experience:** Erasmus+ @ Università degli Studi di Milano (2022-2023)
-- 💼 **Current Role:** ML & AI Automation Intern @ Arketic AI (June 2025 - Present)
-- 🚀 **Freelance:** Building dynamic web applications since September 2020
+### Current Focus
 
-### What I Do
-I specialize in full-stack development with a growing focus on AI integration. My work spans from crafting responsive React frontends to architecting scalable backend systems, all while exploring the exciting world of machine learning and automation.
+- Software Engineer at Arketic AI, contributing to enterprise AI products across backend services, LLM integrations, automation, and secure deployment workflows.
+- Interested in technical leadership, product thinking, and scalable systems that connect engineering execution with real business impact.
 
-**Key Skills:**
-- **Frontend:** React, TypeScript, Next.js, Responsive Design
-- **Backend:** Node.js, Express, REST APIs, Database Design
-- **AI/ML:** LLM Systems, Workflow Orchestration, Model Training
-- **Tools:** Docker, Git, MongoDB, PostgreSQL, CI/CD
+### Areas of Work
+
+- **AI Platforms & Automation:** LLM integration, RAG, agent workflows, orchestration, and automation pipelines
+- **Full-Stack Engineering:** React, React Native, Node.js, Express, REST APIs, PostgreSQL, and Supabase
+- **Product & Architecture:** end-to-end ownership, system design, developer tooling, and performance-focused UX
 
 ### About This Portfolio
-This entire portfolio is a desktop OS simulation running in your browser! It's not just a showcase—it's a technical demonstration of advanced frontend architecture:
 
-- **Virtual File System** - Full CRUD operations with IndexedDB persistence
-- **Window Management** - Draggable, resizable windows with state management
-- **Mobile-First Design** - Responsive desktop experience + native mobile shell
-- **PWA Support** - Installable, works offline
-- **Built-in Apps** - PDF viewer, file explorer, games, and more
+This portfolio is designed as a browser-based desktop environment rather than a conventional personal website. It includes a virtual file system, window management, built-in apps, PDF viewing, markdown rendering, terminal interactions, and adaptive mobile behavior. The goal is to make the portfolio itself a product and engineering artifact.
 
-Every feature you see here is built from scratch using React, TypeScript, and modern web APIs. Feel free to explore, open apps, drag windows around, and experience what a desktop OS feels like in a browser!
+### Working Style
 
-### Let's Connect
-I'm always excited to collaborate on impactful projects and contribute to dynamic teams. Whether it's building scalable web applications, exploring AI/ML solutions, or tackling creative technical challenges, I'm ready to jump in.
+I enjoy building software that is technically solid, useful in practice, and clear in experience. I care about reliability, maintainability, thoughtful interfaces, and strong execution quality.
 
-📧 [contact@yamacbezirgan.com](mailto:contact@yamacbezirgan.com)
-🌐 [yamacbezirgan.com](https://www.yamacbezirgan.com)
-💼 [LinkedIn](https://linkedin.com/in/yamacbezirgan)
-🐙 [GitHub](https://github.com/ymcbzrgn)
+### Contact
 
----
-
-*"Building software is like composing music—it takes technical skill, creativity, and a lot of iteration to get it just right."*`;
+- Email: [contact@yamacbezirgan.com](mailto:contact@yamacbezirgan.com)
+- Website: [yamacbezirgan.com](https://www.yamacbezirgan.com)
+- LinkedIn: [linkedin.com/in/yamacbezirgan](https://linkedin.com/in/yamacbezirgan)
+- GitHub: [github.com/ymcbzrgn](https://github.com/ymcbzrgn)`;
 
   const aboutMeFile: VFSNode = {
     id: 'about-me-md',
@@ -445,7 +544,7 @@ I'm always excited to collaborate on impactful projects and contribute to dynami
     color: '#607D8B',
     size: aboutMeContent.length,
     mimeType: 'text/markdown',
-    targetUrl: `data:text/markdown;base64,${btoa(unescape(encodeURIComponent(aboutMeContent)))}`,
+    targetUrl: encodeMarkdownDataUrl(aboutMeContent),
     readonly: false,
     hidden: false,
     starred: false,
@@ -454,47 +553,35 @@ I'm always excited to collaborate on impactful projects and contribute to dynami
   // About Me markdown file (Turkish)
   const aboutMeContentTR = `# Yamaç Bezirgan
 
-## Full-Stack Developer | AI/ML Meraklısı
+## Yazılım Mühendisi
 
-Merhaba! Ben Yamaç, Altınbaş Üniversitesi Bilgisayar Mühendisliği mezunuyum ve uçtan uca, kullanıcı odaklı ürünler geliştirme konusunda tutkuluyum. Şu anda Arketic AI'da ML & AI Otomasyon Stajyeri olarak çalışıyorum ve teknik titizlikle yaratıcı düşünceyi birleştirerek yenilikçi yazılım çözümleri sunuyorum.
+Yapay zeka platformları, backend mimarisi ve uçtan uca ürün geliştirme odağında çalışan bir yazılım mühendisiyim. Python ve TypeScript ekosistemlerinde üretim ortamına uygun sistemler geliştiriyor; LLM entegrasyonu, otomasyon, sistem tasarımı ve kullanıcıya dokunan deneyimleri bir araya getiriyorum.
 
-### Arka Plan
-- 🎓 **Eğitim:** Bilgisayar Mühendisliği @ Altınbaş Üniversitesi (2020-2025)
-- 🌍 **Uluslararası Deneyim:** Erasmus+ @ Università degli Studi di Milano (2022-2023)
-- 💼 **Güncel Rol:** ML & AI Otomasyon Stajyeri @ Arketic AI (Haziran 2025 - Devam Ediyor)
-- 🚀 **Freelance:** Eylül 2020'den beri dinamik web uygulamaları geliştiriyorum
+### Güncel Odağım
 
-### Ne Yapıyorum
-Yapay zeka entegrasyonuna artan bir odakla full-stack geliştirme konusunda uzmanlaşıyorum. Çalışmalarım responsive React frontend'lerden ölçeklenebilir backend sistemlerine kadar uzanıyor ve bu süreçte makine öğrenmesi ve otomasyonun heyecan verici dünyasını keşfediyorum.
+- Arketic AI'da yazılım mühendisi olarak kurumsal AI ürünleri üzerinde backend servisleri, LLM akışları, otomasyon ve güvenli dağıtım süreçleri geliştiriyorum.
+- Uzun vadede mühendislik icrasını ürün ve iş etkisiyle buluşturan teknik liderlik rollerine ilerlemeyi hedefliyorum.
 
-**Ana Yetenekler:**
-- **Frontend:** React, TypeScript, Next.js, Responsive Tasarım
-- **Backend:** Node.js, Express, REST API'ler, Veritabanı Tasarımı
-- **AI/ML:** LLM Sistemleri, İş Akışı Düzenleme, Model Eğitimi
-- **Araçlar:** Docker, Git, MongoDB, PostgreSQL, CI/CD
+### Çalışma Alanlarım
+
+- **AI Platformları ve Otomasyon:** LLM entegrasyonu, RAG, ajan tabanlı akışlar, orkestrasyon ve otomasyon süreçleri
+- **Full-Stack Geliştirme:** React, React Native, Node.js, Express, REST API'ler, PostgreSQL ve Supabase
+- **Ürün ve Mimari:** uçtan uca sahiplenme, sistem tasarımı, geliştirici araçları ve performans odaklı kullanıcı deneyimi
 
 ### Bu Portfolyo Hakkında
-Bu portfolyo tamamen tarayıcınızda çalışan bir masaüstü işletim sistemi simülasyonu! Sadece bir vitrin değil—gelişmiş frontend mimarisinin teknik bir gösterimi:
 
-- **Sanal Dosya Sistemi** - IndexedDB kalıcılığı ile tam CRUD operasyonları
-- **Pencere Yönetimi** - State yönetimi ile sürüklenebilir, boyutlandırılabilir pencereler
-- **Mobil Öncelikli Tasarım** - Responsive masaüstü deneyimi + native mobil kabuk
-- **PWA Desteği** - Kurulabilir, çevrimdışı çalışır
-- **Yerleşik Uygulamalar** - PDF görüntüleyici, dosya yöneticisi, oyunlar ve daha fazlası
+Bu portfolyo klasik bir kişisel web sitesi yerine tarayıcı içinde çalışan bir masaüstü ortamı olarak tasarlandı. Sanal dosya sistemi, pencere yönetimi, yerleşik uygulamalar, PDF görüntüleme, markdown okuma, terminal etkileşimleri ve mobil uyumlu bir kabuk içeriyor. Amacım portfolyoyu yalnızca bir vitrin değil, aynı zamanda bir ürün ve mühendislik çıktısı haline getirmek.
 
-Burada gördüğünüz her özellik React, TypeScript ve modern web API'leri kullanılarak sıfırdan inşa edildi. Keşfetmekte, uygulamaları açmakta, pencereleri sürüklemekte özgürsünüz ve bir masaüstü işletim sisteminin tarayıcıda nasıl hissettirdiğini deneyimleyin!
+### Çalışma Yaklaşımım
 
-### Bağlantıda Kalalım
-Etkili projelerde işbirliği yapmaktan ve dinamik ekiplere katkıda bulunmaktan her zaman heyecan duyarım. İster ölçeklenebilir web uygulamaları geliştirmek, ister AI/ML çözümleri keşfetmek ya da yaratıcı teknik zorlukları çözmek olsun, atlamaya hazırım.
+Teknik olarak sağlam, gerçek kullanım değeri taşıyan ve deneyim açısından özenli yazılımlar üretmeyi seviyorum. Benim için güvenilirlik, bakım kolaylığı, iyi düşünülmüş arayüzler ve güçlü teslim kalitesi çok önemli.
 
-📧 [contact@yamacbezirgan.com](mailto:contact@yamacbezirgan.com)
-🌐 [yamacbezirgan.com](https://www.yamacbezirgan.com)
-💼 [LinkedIn](https://linkedin.com/in/yamacbezirgan)
-🐙 [GitHub](https://github.com/ymcbzrgn)
+### İletişim
 
----
-
-*"Yazılım geliştirmek müzik bestelemeye benzer—doğru sonucu elde etmek için teknik beceri, yaratıcılık ve bir sürü iterasyon gerekir."*`;
+- E-posta: [contact@yamacbezirgan.com](mailto:contact@yamacbezirgan.com)
+- Website: [yamacbezirgan.com](https://www.yamacbezirgan.com)
+- LinkedIn: [linkedin.com/in/yamacbezirgan](https://linkedin.com/in/yamacbezirgan)
+- GitHub: [github.com/ymcbzrgn](https://github.com/ymcbzrgn)`;
 
   const aboutMeFileTR: VFSNode = {
     id: 'about-me-tr-md',
@@ -507,7 +594,7 @@ Etkili projelerde işbirliği yapmaktan ve dinamik ekiplere katkıda bulunmaktan
     color: '#607D8B',
     size: aboutMeContentTR.length,
     mimeType: 'text/markdown',
-    targetUrl: `data:text/markdown;base64,${btoa(unescape(encodeURIComponent(aboutMeContentTR)))}`,
+    targetUrl: encodeMarkdownDataUrl(aboutMeContentTR),
     readonly: false,
     hidden: false,
     starred: false,
@@ -699,6 +786,24 @@ Feel free to explore and interact with everything.
     starred: false,
   };
 
+  // Old CV kept in trash for nostalgia
+  const oldCvFile: VFSNode = {
+    id: 'old-cv-pdf',
+    type: 'file',
+    name: 'Old CV.pdf',
+    parentId: 'trash',
+    createdAt: now - 90 * 24 * 60 * 60 * 1000,
+    modifiedAt: now - 90 * 24 * 60 * 60 * 1000,
+    icon: 'file-pdf',
+    color: '#9E9E9E',
+    size: 0,
+    mimeType: 'application/x-browser-pdf',
+    targetUrl: '/legacy/YAMAC_BEZIRGAN_CV.pdf',
+    readonly: true,
+    hidden: false,
+    starred: false,
+  };
+
   // Create all nodes
   const nodes = [
     rootNode,
@@ -739,6 +844,7 @@ Feel free to explore and interact with everything.
     icon192,
     icon512,
     oldWebsite,
+    oldCvFile,
   ];
 
   // Use silentIfExists=true to skip duplicates without errors
@@ -749,7 +855,9 @@ Feel free to explore and interact with everything.
   // Store VFS version after successful seed
   localStorage.setItem('vfs-version', currentVersion);
 
-  console.log(`[VFS Seed] ✅ Seeding complete (${nodes.length} nodes processed, version ${currentVersion})`);
+  console.log(
+    `[VFS Seed] ✅ Seeding complete (${nodes.length} nodes processed, version ${currentVersion})`
+  );
 }
 
 /**
@@ -758,10 +866,7 @@ Feel free to explore and interact with everything.
  * Grid: 16 columns x 10 rows (0-15, 0-9)
  * Layout: Apps top-left, Trash bottom-left, Social links bottom-right
  */
-export function getDefaultIconLayout(): Record<
-  string,
-  { x: number; y: number }
-> {
+export function getDefaultIconLayout(): Record<string, { x: number; y: number }> {
   return {
     // Top-left (2x2 grid for main apps)
     home: { x: 0, y: 0 },

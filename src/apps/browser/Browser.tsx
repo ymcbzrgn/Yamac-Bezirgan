@@ -22,6 +22,7 @@ export default function Browser({ windowId, url }: BrowserProps) {
   const [currentUrl, setCurrentUrl] = useState(url || 'about:blank');
   const [loading, setLoading] = useState(false);
   const [embedError, setEmbedError] = useState(false);
+  const isPdfUrl = /\.pdf($|\?)/i.test(currentUrl);
 
   useEffect(() => {
     console.log('[Browser] ✅ MOUNTED', {
@@ -78,8 +79,30 @@ export default function Browser({ windowId, url }: BrowserProps) {
         </div>
       )}
 
+      {/* PDF container */}
+      {!embedError && isPdfUrl && (
+        <object
+          data={currentUrl}
+          type="application/pdf"
+          className="browser__iframe"
+          aria-label="PDF document"
+          onLoad={() => setLoading(false)}
+        >
+          <iframe
+            src={currentUrl}
+            title="Embedded PDF"
+            className="browser__iframe"
+            onLoad={() => setLoading(false)}
+            onError={() => {
+              setEmbedError(true);
+              setLoading(false);
+            }}
+          />
+        </object>
+      )}
+
       {/* Iframe container */}
-      {!embedError && (
+      {!embedError && !isPdfUrl && (
         <iframe
           src={currentUrl}
           sandbox="allow-scripts allow-same-origin allow-popups allow-downloads"
@@ -99,10 +122,10 @@ export default function Browser({ windowId, url }: BrowserProps) {
         <div className="browser-error">
           <div className="browser-error__icon">⚠️</div>
           <h3>Failed to Load</h3>
-          <p>The page could not be loaded. It may have been removed or is temporarily unavailable.</p>
-          <button onClick={() => window.location.reload()}>
-            Reload Page
-          </button>
+          <p>
+            The page could not be loaded. It may have been removed or is temporarily unavailable.
+          </p>
+          <button onClick={() => window.location.reload()}>Reload Page</button>
         </div>
       )}
     </div>

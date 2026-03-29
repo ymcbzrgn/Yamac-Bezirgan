@@ -152,6 +152,9 @@ export default function Desktop() {
     } else if (node.type === 'file' && node.mimeType === 'application/pdf') {
       appId = 'pdf-viewer';
       meta.fileUrl = node.targetUrl || '';
+    } else if (node.type === 'file' && node.mimeType === 'application/x-browser-pdf') {
+      appId = 'browser';
+      meta.url = node.targetUrl || '';
     } else if (node.type === 'link') {
       // Internal links (same-origin) → Browser app
       appId = 'browser';

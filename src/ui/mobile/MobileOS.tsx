@@ -88,93 +88,99 @@ export default function MobileOS() {
   }, [activeApp]);
 
   // Open app from launcher
-  const handleAppOpen = useCallback((node: VFSNode) => {
-    console.log('[MobileOS] 📱 handleAppOpen CALLED', {
-      nodeName: node.name,
-      nodeId: node.id,
-      nodeType: node.type,
-      timestamp: new Date().toISOString(),
-    });
-
-    // Check if app already open
-    const existingApp = openApps.find((app) => app.node.id === node.id);
-    if (existingApp) {
-      // Focus existing app
-      console.log('[MobileOS] 🔄 App already open, focusing', {
-        appId: existingApp.id,
+  const handleAppOpen = useCallback(
+    (node: VFSNode) => {
+      console.log('[MobileOS] 📱 handleAppOpen CALLED', {
+        nodeName: node.name,
+        nodeId: node.id,
+        nodeType: node.type,
+        timestamp: new Date().toISOString(),
       });
-      setActiveAppId(existingApp.id);
-      setCurrentView('app');
-      return;
-    }
 
-    // External links: Open directly in new tab
-    if (node.type === 'link' && node.targetUrl) {
-      const url = node.targetUrl;
-      if (url.startsWith('http://') || url.startsWith('https://')) {
-        window.open(url, '_blank', 'noopener,noreferrer');
+      // Check if app already open
+      const existingApp = openApps.find((app) => app.node.id === node.id);
+      if (existingApp) {
+        // Focus existing app
+        console.log('[MobileOS] 🔄 App already open, focusing', {
+          appId: existingApp.id,
+        });
+        setActiveAppId(existingApp.id);
+        setCurrentView('app');
         return;
       }
-    }
 
-    // Create new app instance
-    const windowId = `mobile-${node.id}-${Date.now()}`;
+      // External links: Open directly in new tab
+      if (node.type === 'link' && node.targetUrl) {
+        const url = node.targetUrl;
+        if (url.startsWith('http://') || url.startsWith('https://')) {
+          window.open(url, '_blank', 'noopener,noreferrer');
+          return;
+        }
+      }
 
-    // Determine app ID (same logic as Desktop.tsx for feature parity)
-    let appId = 'placeholder';
-    let meta: Record<string, any> = {};
+      // Create new app instance
+      const windowId = `mobile-${node.id}-${Date.now()}`;
 
-    // IMPORTANT: Check special folders BEFORE generic folder check!
-    if (node.id === 'projects') {
-      // Projects folder → GitHub Projects viewer (not file-explorer!)
-      appId = 'github-projects';
-    } else if (node.type === 'folder') {
-      // Other folders → File Explorer
-      appId = 'file-explorer';
-    } else if (node.type === 'file' && node.mimeType === 'application/pdf') {
-      appId = 'pdf-viewer';
-    } else if (node.type === 'file' && node.mimeType === 'text/plain') {
-      appId = 'text-viewer';
-    } else if (node.type === 'file' && node.mimeType === 'text/markdown') {
-      appId = 'markdown-viewer';
-    } else if (node.type === 'link') {
-      // Internal links (same-origin) → Browser app
-      appId = 'browser';
-      meta.url = node.targetUrl;
-    } else if (node.type === 'app') {
-      appId = node.appId || 'placeholder';
-    } else if (node.mimeType === 'application/x-legacy-site') {
-      // Legacy site easter egg
-      appId = 'browser';
-      meta.url = node.targetUrl || '/legacy/index.html';
-    }
+      // Determine app ID (same logic as Desktop.tsx for feature parity)
+      let appId = 'placeholder';
+      let meta: Record<string, any> = {};
 
-    // Add to open apps
-    const newApp: OpenApp = {
-      id: windowId,
-      node,
-      windowId,
-      appId, // Store calculated appId
-    };
+      // IMPORTANT: Check special folders BEFORE generic folder check!
+      if (node.id === 'projects') {
+        // Projects folder → GitHub Projects viewer (not file-explorer!)
+        appId = 'github-projects';
+      } else if (node.type === 'folder') {
+        // Other folders → File Explorer
+        appId = 'file-explorer';
+      } else if (node.type === 'file' && node.mimeType === 'application/pdf') {
+        appId = 'pdf-viewer';
+      } else if (node.type === 'file' && node.mimeType === 'application/x-browser-pdf') {
+        appId = 'browser';
+        meta.url = node.targetUrl || '';
+      } else if (node.type === 'file' && node.mimeType === 'text/plain') {
+        appId = 'text-viewer';
+      } else if (node.type === 'file' && node.mimeType === 'text/markdown') {
+        appId = 'markdown-viewer';
+      } else if (node.type === 'link') {
+        // Internal links (same-origin) → Browser app
+        appId = 'browser';
+        meta.url = node.targetUrl;
+      } else if (node.type === 'app') {
+        appId = node.appId || 'placeholder';
+      } else if (node.mimeType === 'application/x-legacy-site') {
+        // Legacy site easter egg
+        appId = 'browser';
+        meta.url = node.targetUrl || '/legacy/index.html';
+      }
 
-    console.log('[MobileOS] ✅ Creating new app instance', {
-      windowId,
-      appId,
-      nodeName: node.name,
-      newOpenAppsLength: openApps.length + 1,
-      timestamp: new Date().toISOString(),
-    });
+      // Add to open apps
+      const newApp: OpenApp = {
+        id: windowId,
+        node,
+        windowId,
+        appId, // Store calculated appId
+      };
 
-    setOpenApps([...openApps, newApp]);
-    setActiveAppId(windowId);
-    setCurrentView('app');
+      console.log('[MobileOS] ✅ Creating new app instance', {
+        windowId,
+        appId,
+        nodeName: node.name,
+        newOpenAppsLength: openApps.length + 1,
+        timestamp: new Date().toISOString(),
+      });
 
-    console.log('[MobileOS] 🎬 State updates dispatched', {
-      willSetActiveAppId: windowId,
-      willSetCurrentView: 'app',
-      timestamp: new Date().toISOString(),
-    });
-  }, [openApps, setOpenApps, setActiveAppId, setCurrentView]);
+      setOpenApps([...openApps, newApp]);
+      setActiveAppId(windowId);
+      setCurrentView('app');
+
+      console.log('[MobileOS] 🎬 State updates dispatched', {
+        willSetActiveAppId: windowId,
+        willSetCurrentView: 'app',
+        timestamp: new Date().toISOString(),
+      });
+    },
+    [openApps, setOpenApps, setActiveAppId, setCurrentView]
+  );
 
   // Close app
   const handleAppClose = (appId: string) => {
@@ -265,11 +271,13 @@ export default function MobileOS() {
     activeAppId,
     openAppsCount: openApps.length,
     activeAppExists: !!activeApp,
-    activeAppDetails: activeApp ? {
-      appId: activeApp.appId,
-      windowId: activeApp.windowId,
-      nodeName: activeApp.node.name,
-    } : null,
+    activeAppDetails: activeApp
+      ? {
+          appId: activeApp.appId,
+          windowId: activeApp.windowId,
+          nodeName: activeApp.node.name,
+        }
+      : null,
     timestamp: new Date().toISOString(),
   });
 
@@ -277,77 +285,80 @@ export default function MobileOS() {
     <div className="mobile-os">
       {console.log('[MobileOS] 🏠 Rendering mobile-os container')}
       <AnimatePresence>
-        {console.log('[MobileOS] 🎭 AnimatePresence evaluating children (NO WAIT MODE)', { currentView })}
+        {console.log('[MobileOS] 🎭 AnimatePresence evaluating children (NO WAIT MODE)', {
+          currentView,
+        })}
 
         {/* Launcher */}
-        {currentView === 'launcher' && (() => {
-          console.log('[MobileOS] 🚀 Rendering MobileLauncher');
-          return (
-            <MobileLauncher
-              key="launcher"
-              onAppOpen={handleAppOpen}
-            />
-          );
-        })()}
+        {currentView === 'launcher' &&
+          (() => {
+            console.log('[MobileOS] 🚀 Rendering MobileLauncher');
+            return <MobileLauncher key="launcher" onAppOpen={handleAppOpen} />;
+          })()}
 
         {/* Active App */}
-        {currentView === 'app' && activeApp && (() => {
-          console.log('[MobileOS] 📱 Rendering MobileAppShell + AppLoader', {
-            appId: activeApp.appId,
-            windowId: activeApp.windowId,
-            nodeName: activeApp.node.name,
-            nodeId: activeApp.node.id,
-          });
-          return (
-            <MobileAppShell
-              key={`app-${activeApp.id}`}
-              onClose={handleAppShellClose}
-              appTitle={activeApp.node.name}
-            >
-              {console.log('[MobileOS] 🎯 AppLoader children rendering', {
-                appId: activeApp.appId,
-                nodeTargetUrl: activeApp.node.targetUrl,
-              })}
-              <AppLoader
-                appId={activeApp.appId}
-                windowId={activeApp.windowId}
-                nodeId={activeApp.node.id}
-                {...(activeApp.appId === 'pdf-viewer'
-                  ? { fileUrl: activeApp.node.targetUrl || '' }
-                  : {})}
-                {...(activeApp.appId === 'browser'
-                  ? { url: activeApp.node.targetUrl || '' }
-                  : {})}
-              />
-            </MobileAppShell>
-          );
-        })()}
+        {currentView === 'app' &&
+          activeApp &&
+          (() => {
+            console.log('[MobileOS] 📱 Rendering MobileAppShell + AppLoader', {
+              appId: activeApp.appId,
+              windowId: activeApp.windowId,
+              nodeName: activeApp.node.name,
+              nodeId: activeApp.node.id,
+            });
+            return (
+              <MobileAppShell
+                key={`app-${activeApp.id}`}
+                onClose={handleAppShellClose}
+                appTitle={activeApp.node.name}
+              >
+                {console.log('[MobileOS] 🎯 AppLoader children rendering', {
+                  appId: activeApp.appId,
+                  nodeTargetUrl: activeApp.node.targetUrl,
+                })}
+                <AppLoader
+                  appId={activeApp.appId}
+                  windowId={activeApp.windowId}
+                  nodeId={activeApp.node.id}
+                  {...(activeApp.appId === 'pdf-viewer'
+                    ? { fileUrl: activeApp.node.targetUrl || '' }
+                    : {})}
+                  {...(activeApp.appId === 'browser'
+                    ? { url: activeApp.node.targetUrl || '' }
+                    : {})}
+                />
+              </MobileAppShell>
+            );
+          })()}
 
         {/* Active App - NULL CHECK */}
-        {currentView === 'app' && !activeApp && (() => {
-          console.error('[MobileOS] ❌❌❌ currentView is "app" but activeApp is NULL!', {
-            currentView,
-            activeAppId,
-            openApps,
-            timestamp: new Date().toISOString(),
-          });
-          return null;
-        })()}
+        {currentView === 'app' &&
+          !activeApp &&
+          (() => {
+            console.error('[MobileOS] ❌❌❌ currentView is "app" but activeApp is NULL!', {
+              currentView,
+              activeAppId,
+              openApps,
+              timestamp: new Date().toISOString(),
+            });
+            return null;
+          })()}
 
         {/* App Switcher */}
-        {currentView === 'switcher' && (() => {
-          console.log('[MobileOS] 🔄 Rendering MobileAppSwitcher');
-          return (
-            <MobileAppSwitcher
-              key="switcher"
-              openApps={openApps}
-              onAppFocus={handleAppFocus}
-              onAppClose={handleAppClose}
-              onCloseAll={handleCloseAll}
-              onDismiss={handleDismissSwitcher}
-            />
-          );
-        })()}
+        {currentView === 'switcher' &&
+          (() => {
+            console.log('[MobileOS] 🔄 Rendering MobileAppSwitcher');
+            return (
+              <MobileAppSwitcher
+                key="switcher"
+                openApps={openApps}
+                onAppFocus={handleAppFocus}
+                onAppClose={handleAppClose}
+                onCloseAll={handleCloseAll}
+                onDismiss={handleDismissSwitcher}
+              />
+            );
+          })()}
       </AnimatePresence>
 
       {/* Swipe-up gesture trigger (invisible) */}

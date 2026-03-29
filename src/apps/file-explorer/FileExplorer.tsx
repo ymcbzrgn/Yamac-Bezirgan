@@ -24,7 +24,12 @@ import { useState, useMemo, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useVFSNodes, useVFSNodesByParent, useVFSActions } from '../../os/store';
 import { getIconDisplay } from '../../os/utils/iconMap';
-import { getUniqueFolderName, getUniqueTextFileName, validateName, nameExists } from '../../os/utils/naming';
+import {
+  getUniqueFolderName,
+  getUniqueTextFileName,
+  validateName,
+  nameExists,
+} from '../../os/utils/naming';
 import type { VFSNode } from '../../os/types';
 import { useIsMobile } from '../../os/hooks/useDeviceType';
 import { useLongPress } from '../../os/hooks/useLongPress';
@@ -150,6 +155,22 @@ export default function FileExplorer({ windowId, nodeId }: FileExplorerProps) {
         openAppFromExplorer('markdown-viewer', node);
       } else if (node.mimeType === 'application/pdf') {
         openAppFromExplorer('pdf-viewer', node);
+      } else if (node.mimeType === 'application/x-browser-pdf') {
+        openApp({
+          id: uuidv4(),
+          appId: 'browser',
+          nodeId: node.id,
+          title: node.name,
+          icon: node.icon || '📄',
+          bounds: {
+            x: (window.innerWidth - 800) / 2,
+            y: (window.innerHeight - 600) / 2,
+            width: 800,
+            height: 600,
+          },
+          state: 'normal',
+          meta: { url: node.targetUrl || '' },
+        });
       } else if (node.mimeType === 'application/x-legacy-site') {
         // Legacy site easter egg - open in browser
         openApp({
@@ -444,11 +465,14 @@ export default function FileExplorer({ windowId, nodeId }: FileExplorerProps) {
         return;
       }
       e.dataTransfer.effectAllowed = 'move';
-      e.dataTransfer.setData('application/vnd.file-node', JSON.stringify({
-        id: node.id,
-        type: node.type,
-        parentId: node.parentId,
-      }));
+      e.dataTransfer.setData(
+        'application/vnd.file-node',
+        JSON.stringify({
+          id: node.id,
+          type: node.type,
+          parentId: node.parentId,
+        })
+      );
       setIsDragging(true);
     };
 
@@ -511,20 +535,22 @@ export default function FileExplorer({ windowId, nodeId }: FileExplorerProps) {
     const isDropTarget = isOver && canDrop;
 
     // Conditional event handlers: Mobile (touch) vs Desktop (mouse)
-    const mobileHandlers = isMobile ? {
-      ...longPressHandlers,
-      onTouchStart: (e: React.TouchEvent<HTMLDivElement>) => {
-        if (!isRenaming) {
-          setIsLongPressing(true);
-          longPressHandlers.onTouchStart(e);
+    const mobileHandlers = isMobile
+      ? {
+          ...longPressHandlers,
+          onTouchStart: (e: React.TouchEvent<HTMLDivElement>) => {
+            if (!isRenaming) {
+              setIsLongPressing(true);
+              longPressHandlers.onTouchStart(e);
+            }
+          },
+          onTouchEnd: () => {
+            setIsLongPressing(false);
+            longPressHandlers.onTouchEnd();
+          },
+          onClick: () => !isRenaming && onOpen(node), // Single tap opens on mobile
         }
-      },
-      onTouchEnd: () => {
-        setIsLongPressing(false);
-        longPressHandlers.onTouchEnd();
-      },
-      onClick: () => !isRenaming && onOpen(node), // Single tap opens on mobile
-    } : {};
+      : {};
 
     const desktopHandlers = {
       onDoubleClick: () => !isRenaming && onOpen(node),
@@ -545,9 +571,7 @@ export default function FileExplorer({ windowId, nodeId }: FileExplorerProps) {
         {...desktopHandlers}
         title={!isRenaming ? node.name : undefined}
       >
-        <div className="file-explorer__item-icon">
-          {getIconDisplay(node.icon)}
-        </div>
+        <div className="file-explorer__item-icon">{getIconDisplay(node.icon)}</div>
         {isRenaming ? (
           <input
             type="text"
@@ -603,7 +627,11 @@ export default function FileExplorer({ windowId, nodeId }: FileExplorerProps) {
                 onClick={() => navigateTo(crumb.id)}
                 disabled={index === breadcrumbTrail.length - 1}
               >
-                {crumb.icon && <span className="file-explorer__breadcrumb-icon">{getIconDisplay(crumb.icon)}</span>}
+                {crumb.icon && (
+                  <span className="file-explorer__breadcrumb-icon">
+                    {getIconDisplay(crumb.icon)}
+                  </span>
+                )}
                 {crumb.name}
               </button>
             </span>
@@ -614,13 +642,17 @@ export default function FileExplorer({ windowId, nodeId }: FileExplorerProps) {
       {/* Content Area */}
       <div
         className="file-explorer__content"
-        onContextMenu={!isMobile ? (e) => {
-          const target = e.target as HTMLElement;
-          // If not clicking on an item, treat as empty space
-          if (!target.closest('.file-explorer__item')) {
-            handleContextMenu(e, null);
-          }
-        } : undefined}
+        onContextMenu={
+          !isMobile
+            ? (e) => {
+                const target = e.target as HTMLElement;
+                // If not clicking on an item, treat as empty space
+                if (!target.closest('.file-explorer__item')) {
+                  handleContextMenu(e, null);
+                }
+              }
+            : undefined
+        }
       >
         {sortedChildren.length === 0 ? (
           <div className="file-explorer__empty">
