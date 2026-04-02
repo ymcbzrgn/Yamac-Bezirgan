@@ -14,12 +14,12 @@ Building products at the intersection of software engineering and AI.
 
 ---
 
-<img src="https://raw.githubusercontent.com/ymcbzrgn/ymcbzrgn/output/profile-night-green.svg" width="100%" alt="3d contribution graph" />
-
----
-
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/ymcbzrgn/ymcbzrgn/output/github-snake-dark.svg" />
   <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/ymcbzrgn/ymcbzrgn/output/github-snake.svg" />
   <img alt="contribution snake" src="https://raw.githubusercontent.com/ymcbzrgn/ymcbzrgn/output/github-snake-dark.svg" />
 </picture>
+
+---
+
+<img src="https://raw.githubusercontent.com/ymcbzrgn/ymcbzrgn/output/profile-night-green.svg" width="40%" alt="3d contribution graph" />
