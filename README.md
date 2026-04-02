@@ -22,4 +22,4 @@ Building products at the intersection of software engineering and AI.
 
 ---
 
-<img src="https://raw.githubusercontent.com/ymcbzrgn/ymcbzrgn/output/profile-night-green.svg" width="40%" alt="3d contribution graph" />
+<img src="https://github-readme-activity-graph.vercel.app/graph?username=ymcbzrgn&theme=github-dark&hide_border=true&area=true" width="100%" alt="activity graph" />
