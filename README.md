@@ -10,7 +10,7 @@ Building products at the intersection of software engineering and AI.
 
 ---
 
-<img src="https://github-readme-stats.vercel.app/api?username=ymcbzrgn&show_icons=true&theme=github_dark&hide_border=true&count_private=true&icon_color=79ff97" height="165" /><img src="https://github-readme-stats.vercel.app/api/top-langs/?username=ymcbzrgn&layout=compact&theme=github_dark&hide_border=true&langs_count=6" height="165" />
+<img src="https://github-readme-stats-red-mu-18.vercel.app/api?username=ymcbzrgn&show_icons=true&theme=github_dark&hide_border=true&count_private=true&icon_color=79ff97" height="165" /><img src="https://github-readme-stats-red-mu-18.vercel.app/api/top-langs/?username=ymcbzrgn&layout=compact&theme=github_dark&hide_border=true&langs_count=6" height="165" />
 
 ---
 
@@ -22,4 +22,4 @@ Building products at the intersection of software engineering and AI.
 
 ---
 
-<img src="https://github-readme-activity-graph.vercel.app/graph?username=ymcbzrgn&theme=github-dark&hide_border=true&area=true" width="100%" alt="activity graph" />
+<!-- <img src="https://github-readme-activity-graph.vercel.app/graph?username=ymcbzrgn&theme=github-dark&hide_border=true&area=true" width="100%" alt="activity graph" /> -->
