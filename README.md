@@ -14,7 +14,7 @@ Building products at the intersection of software engineering and AI.
 
 ---
 
-<img src="https://raw.githubusercontent.com/ymcbzrgn/ymcbzrgn/output/profile-3d-contrib/profile-night-green.svg" width="100%" alt="3d contribution graph" />
+<img src="https://raw.githubusercontent.com/ymcbzrgn/ymcbzrgn/output/profile-night-green.svg" width="100%" alt="3d contribution graph" />
 
 ---
 
