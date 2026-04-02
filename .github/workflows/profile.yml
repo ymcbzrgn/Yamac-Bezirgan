@@ -26,7 +26,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           USERNAME: ymcbzrgn
 
-      - run: cp -r profile-3d-contrib/* dist/
+      - run: sudo cp -r profile-3d-contrib/* dist/
         name: Merge assets
 
       - uses: crazy-max/ghaction-github-pages@v4
